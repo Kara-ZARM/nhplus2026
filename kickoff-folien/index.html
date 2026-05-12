@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kick-Off · NHPlus · LF5</title>
+<style>
+  :root {
+    --bg: #f7f6f1;
+    --paper: #ffffff;
+    --ink: #1c1e22;
+    --ink-soft: #3d4250;
+    --ink-dim: #6b7280;
+    --line: #e3e1d9;
+    --line-soft: #ecebe4;
+    --accent: #2f6f5e;     /* muted teal */
+    --accent-soft: #e9f1ee;
+    --mark: #b45309;       /* amber for emphasis, sparingly */
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, sans-serif;
+    height: 100%;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 6vh 7vw;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .4s ease, transform .4s ease;
+    pointer-events: none;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .slide-inner {
+    width: min(1280px, 100%);
+    max-width: 100%;
+  }
+
+  /* ---------- typography ---------- */
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: clamp(14px, 1.1vw, 17px);
+    color: var(--ink-dim);
+    font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(56px, 7vw, 96px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin: 14px 0 0;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  h2 {
+    font-size: clamp(38px, 4.6vw, 64px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 10px 0 28px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  p { font-size: clamp(18px, 1.6vw, 24px); line-height: 1.55; color: var(--ink-soft); margin: 0; }
+  .lede { font-size: clamp(22px, 2vw, 30px); color: var(--ink-soft); line-height: 1.4; }
+
+  hr.rule {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 22px 0;
+  }
+
+  /* ---------- chrome ---------- */
+  .corner {
+    position: fixed;
+    top: 26px;
+    left: 32px;
+    font-size: clamp(12px, 0.95vw, 15px);
+    color: var(--ink-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    z-index: 10;
+  }
+  .corner b { color: var(--ink); font-weight: 600; }
+
+  .pagenum {
+    position: fixed;
+    top: 26px;
+    right: 32px;
+    font-size: clamp(12px, 0.95vw, 15px);
+    color: var(--ink-dim);
+    font-variant-numeric: tabular-nums;
+    z-index: 10;
+  }
+
+  .progress {
+    position: fixed;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+  .dot {
+    width: 28px; height: 3px; border-radius: 2px;
+    background: var(--line);
+    transition: background .25s ease, width .25s ease;
+    cursor: pointer;
+  }
+  .dot.active { background: var(--accent); width: 44px; }
+
+  .hint {
+    position: fixed;
+    bottom: 26px;
+    right: 32px;
+    font-size: clamp(11px, 0.85vw, 13px);
+    color: var(--ink-dim);
+    z-index: 10;
+  }
+  kbd {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- slide 1: cover ---------- */
+  .cover-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  @media (max-width: 900px) { .cover-grid { grid-template-columns: 1fr; } }
+
+  .meta {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 40px;
+    justify-content: start;
+  }
+  .meta-item { font-size: clamp(15px, 1.15vw, 18px); color: var(--ink-dim); }
+  .meta-item b { color: var(--ink); display: block; font-size: clamp(18px, 1.4vw, 22px); margin-bottom: 4px; font-weight: 600; }
+
+  .factsheet {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 30px 32px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+  }
+  .factsheet h3 {
+    font-size: clamp(13px, 1vw, 16px);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin: 0 0 18px;
+    color: var(--ink-dim);
+    font-weight: 600;
+  }
+  .factsheet dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px 20px;
+    margin: 0;
+    font-size: clamp(16px, 1.25vw, 19px);
+  }
+  .factsheet dt { color: var(--ink-dim); }
+  .factsheet dd { margin: 0; color: var(--ink); font-weight: 500; }
+
+  /* ---------- slide 2: ausgangslage ---------- */
+  .issues {
+    margin-top: 36px;
+    border-top: 2px solid var(--ink);
+  }
+  .issue {
+    display: grid;
+    grid-template-columns: 56px 280px 1fr;
+    gap: 32px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .issue .num {
+    font-size: clamp(14px, 1.1vw, 17px);
+    color: var(--ink-dim);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+  }
+  .issue h3 {
+    margin: 0;
+    font-size: clamp(22px, 1.9vw, 28px);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .issue p {
+    font-size: clamp(18px, 1.5vw, 22px);
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .issue.open h3 { color: var(--mark); }
+  .issue.open .num { color: var(--mark); font-weight: 600; }
+  @media (max-width: 700px) {
+    .issue { grid-template-columns: 1fr; gap: 4px; }
+  }
+  .findings-cta {
+    margin-top: 36px;
+    padding: 28px 32px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    font-size: clamp(18px, 1.5vw, 22px);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .findings-cta b { color: var(--accent); font-weight: 600; }
+
+  /* ---------- slide 3: bereiche ---------- */
+  .areas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 36px;
+  }
+  @media (max-width: 900px) { .areas { grid-template-columns: 1fr; } }
+  .area {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 32px 30px;
+  }
+  .area .key {
+    font-size: clamp(13px, 1vw, 15px);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+  .area h3 { margin: 0 0 12px; font-size: clamp(22px, 1.9vw, 28px); font-weight: 600; color: var(--ink); }
+  .area p { font-size: clamp(16px, 1.3vw, 20px); }
+
+  /* ---------- slide 4: ablauf ---------- */
+  table.plan {
+    width: 100%;
+    margin-top: 30px;
+    border-collapse: collapse;
+    font-size: clamp(17px, 1.4vw, 22px);
+  }
+  table.plan th, table.plan td {
+    text-align: left;
+    padding: 20px 20px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.plan th {
+    font-weight: 600;
+    color: var(--ink-dim);
+    font-size: clamp(12px, 1vw, 15px);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border-bottom: 2px solid var(--ink);
+  }
+  table.plan td.id {
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    font-weight: 700;
+    width: 100px;
+  }
+  table.plan td.topic {
+    font-weight: 600;
+    color: var(--ink);
+    width: 280px;
+  }
+  table.plan td.hours {
+    color: var(--ink-dim);
+    white-space: nowrap;
+    width: 140px;
+  }
+  table.plan td.what { color: var(--ink-soft); }
+
+  /* ---------- slide 5: skills ---------- */
+  .skills {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    margin-top: 30px;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .skill {
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 26px 30px;
+    background: var(--paper);
+  }
+  .skill .tag {
+    font-size: clamp(11px, 0.9vw, 13px);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-dim);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .skill h4 { margin: 0 0 6px; font-size: clamp(19px, 1.55vw, 24px); font-weight: 600; color: var(--ink); }
+  .skill p { font-size: clamp(15px, 1.2vw, 18px); color: var(--ink-soft); line-height: 1.5; }
+  @media (max-width: 700px) {
+    .skills { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- slide 6: bewertung (bar chart) ---------- */
+  .bars {
+    margin-top: 36px;
+    display: grid;
+    gap: 18px;
+  }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 360px 1fr 80px;
+    align-items: center;
+    gap: 24px;
+  }
+  .bar-row .lbl { font-size: clamp(17px, 1.35vw, 21px); color: var(--ink); font-weight: 500; }
+  .bar-row .lbl span { color: var(--ink-dim); font-weight: 400; font-size: clamp(15px, 1.2vw, 18px); }
+  .bar-row .track {
+    height: 18px;
+    background: var(--line-soft);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-row .fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+  .slide.active .bar-row .fill { transform: scaleX(1); }
+  .bar-row .pct {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(18px, 1.4vw, 22px);
+    font-weight: 700;
+    color: var(--ink);
+  }
+  @media (max-width: 700px) {
+    .bar-row { grid-template-columns: 1fr; gap: 4px; }
+    .bar-row .pct { text-align: left; }
+  }
+  .bewertung-note {
+    margin-top: 36px;
+    font-size: clamp(15px, 1.2vw, 18px);
+    color: var(--ink-dim);
+    border-top: 1px solid var(--line);
+    padding-top: 22px;
+  }
+
+  /* ---------- slide 7: workflow ---------- */
+  .workflow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-top: 30px;
+  }
+  @media (max-width: 900px) { .workflow { grid-template-columns: 1fr; } }
+  .panel {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 28px 32px;
+  }
+  .panel h3 {
+    margin: 0 0 18px;
+    font-size: clamp(20px, 1.6vw, 26px);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .panel ul { padding: 0; margin: 0; list-style: none; }
+  .panel li {
+    font-size: clamp(16px, 1.3vw, 20px);
+    color: var(--ink-soft);
+    line-height: 1.55;
+    padding: 12px 0 12px 30px;
+    border-bottom: 1px solid var(--line-soft);
+    position: relative;
+  }
+  .panel li::before {
+    content: "—";
+    color: var(--accent);
+    font-weight: 600;
+    position: absolute;
+    left: 0;
+    top: 12px;
+  }
+  .panel li:last-child { border-bottom: none; }
+  .panel li b { color: var(--ink); font-weight: 600; }
+  .panel li mark {
+    background: rgba(180, 83, 9, 0.12);
+    color: var(--mark);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 1px 8px;
+    border-radius: 3px;
+  }
+
+  /* ---------- slide 8: heute ---------- */
+  .steps {
+    list-style: none;
+    padding: 0;
+    margin: 36px 0 0;
+    counter-reset: step;
+    border-top: 2px solid var(--ink);
+  }
+  .steps li {
+    counter-increment: step;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    gap: 24px;
+    align-items: baseline;
+  }
+  .steps li::before {
+    content: counter(step, decimal-leading-zero);
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(20px, 1.6vw, 26px);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .steps h4 { margin: 0 0 6px; font-size: clamp(20px, 1.6vw, 26px); font-weight: 600; color: var(--ink); }
+  .steps p { font-size: clamp(16px, 1.3vw, 20px); color: var(--ink-soft); }
+
+  /* ---------- slide: stack (code snippets) ---------- */
+  .stack {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+    margin-top: 30px;
+  }
+  @media (max-width: 900px) { .stack { grid-template-columns: 1fr; } }
+  .codecard {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .codecard-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--line);
+    background: #fbfaf6;
+  }
+  .codecard-head .label {
+    font-size: clamp(13px, 1.05vw, 16px);
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+  }
+  .codecard-head .file {
+    margin-left: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: clamp(12px, 0.95vw, 14px);
+    color: var(--ink-dim);
+  }
+  .codecard pre {
+    margin: 0;
+    padding: 22px 26px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: clamp(13px, 1.1vw, 17px);
+    line-height: 1.55;
+    color: var(--ink);
+    overflow-x: auto;
+    background: var(--paper);
+  }
+  .codecard pre .c { color: #6b7280; }
+  .codecard pre .k { color: #1d4f7f; }
+  .codecard pre .t { color: #2f6f5e; }
+  .codecard pre .s { color: #b45309; }
+  .codecard pre .a { color: #9d3a64; }
+  .codecard pre .n { color: #1d4f7f; }
+  .codecard-foot {
+    padding: 14px 22px 16px;
+    border-top: 1px dashed var(--line);
+    font-size: clamp(13px, 1.05vw, 16px);
+    color: var(--ink-soft);
+    background: #fbfaf6;
+  }
+  .codecard-foot b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- slide 9: ende ---------- */
+  .end { text-align: left; }
+  .end h1 { font-size: clamp(64px, 8vw, 120px); }
+</style>
+</head>
+<body>
+
+<div class="corner"><b>NHPlus</b> · Kick-Off · LF5</div>
+<div class="pagenum" id="pagenum">01 / 09</div>
+
+<div class="deck" id="deck">
+
+  <!-- ============ Slide 1: Cover ============ -->
+  <section class="slide active">
+    <div class="slide-inner">
+      <div class="cover-grid">
+        <div>
+          <div class="eyebrow">Lernfeld 5 · Projekt-Kick-Off</div>
+          <h1>NHPlus</h1>
+          <p class="lede" style="margin-top: 14px; max-width: 480px;">
+            Eine bestehende Pflegeheim-Software analysieren, um ein Modul erweitern und an Datenschutzanforderungen anpassen.
+          </p>
+          <div class="meta">
+            <div class="meta-item"><b>~6 Wochen</b>Projektdauer</div>
+            <div class="meta-item"><b>3er-Teams</b>feste Gruppen</div>
+            <div class="meta-item"><b>5 Arbeitsblätter</b>AB 01 – AB 05</div>
+          </div>
+        </div>
+
+        <div class="factsheet">
+          <h3>Eckdaten</h3>
+          <dl>
+            <dt>Anwendung</dt><dd>NHPlus (Java + JavaFX)</dd>
+            <dt>Datenbank</dt><dd>SQLite</dd>
+            <dt>Themen</dt><dd>DAO, MVP, JDBC, DSGVO</dd>
+            <dt>Abgabe</dt><dd>itsLearning + Repo-Link</dd>
+            <dt>Bewertung</dt><dd>5 Teilbereiche, gewichtet</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 2: Stack (Code) ============ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Womit ihr arbeitet</div>
+      <h2>JavaFX vorne, SQLite hinten.</h2>
+
+      <div class="stack">
+        <div class="codecard">
+          <div class="codecard-head">
+            <span class="label">JavaFX · FXML-View</span>
+            <span class="file">AllPatientView.fxml</span>
+          </div>
+<pre><span class="c">&lt;!-- View: deklarativ in FXML --&gt;</span>
+<span class="k">&lt;TableView</span> <span class="a">fx:id</span>=<span class="s">"tableView"</span>
+           <span class="a">editable</span>=<span class="s">"true"</span><span class="k">&gt;</span>
+  <span class="k">&lt;columns&gt;</span>
+    <span class="k">&lt;TableColumn</span> <span class="a">text</span>=<span class="s">"Vorname"</span><span class="k">/&gt;</span>
+    <span class="k">&lt;TableColumn</span> <span class="a">text</span>=<span class="s">"Nachname"</span><span class="k">/&gt;</span>
+    <span class="k">&lt;TableColumn</span> <span class="a">text</span>=<span class="s">"Diagnose"</span><span class="k">/&gt;</span>
+  <span class="k">&lt;/columns&gt;</span>
+<span class="k">&lt;/TableView&gt;</span>
+<span class="k">&lt;Button</span> <span class="a">onAction</span>=<span class="s">"#handleNewPatient"</span>
+        <span class="a">text</span>=<span class="s">"Neuer Patient"</span><span class="k">/&gt;</span></pre>
+          <div class="codecard-foot">
+            View &amp; Controller getrennt — der <b>MVP-Pattern</b> bindet beides.
+          </div>
+        </div>
+
+        <div class="codecard">
+          <div class="codecard-head">
+            <span class="label">JDBC · DAO-Methode</span>
+            <span class="file">PatientDao.java</span>
+          </div>
+<pre><span class="t">PreparedStatement</span> stmt = conn.prepareStatement(
+  <span class="s">"INSERT INTO patient "</span> +
+  <span class="s">"(firstname, surname, diagnosis) "</span> +
+  <span class="s">"VALUES (?, ?, ?)"</span>);
+
+stmt.setString(<span class="n">1</span>, patient.getFirstName());
+stmt.setString(<span class="n">2</span>, patient.getSurname());
+stmt.setString(<span class="n">3</span>, patient.getDiagnosis());
+
+stmt.executeUpdate();</pre>
+          <div class="codecard-foot">
+            Datenbankzugriff zentral im <b>DAO</b> — nicht im Controller.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 3: Ausgangslage ============ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Ausgangslage</div>
+      <h2>NHPlus existiert — und hat Lücken.</h2>
+      <p class="lede" style="max-width: 900px;">
+        Die Anwendung verwaltet Patienten und Behandlungen eines Pflegeheims. Da Gesundheitsdaten verarbeitet werden, gilt Art. 9 DSGVO — die höchste Sensibilitätsstufe.
+      </p>
+
+      <div class="issues">
+        <div class="issue open">
+          <div class="num">01</div>
+          <h3>Kein Login</h3>
+          <p>Nach dem Start ist die gesamte Anwendung ohne Anmeldung nutzbar.</p>
+        </div>
+      </div>
+
+      <div class="findings-cta">
+        Und das ist <b>nur einer</b> von mehreren DSGVO-Verstößen, die in NHPlus stecken.<br>
+        Die anderen findet ihr in <b>AB 02</b> selbst — Sicherheitsmaßnahmen, Grundprinzipien, Betroffenenrechte.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 3: Bereiche ============ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Eure Aufgabe</div>
+      <h2>Drei Bereiche.</h2>
+
+      <div class="areas">
+        <div class="area">
+          <div class="key">A · Verstehen</div>
+          <h3>Architektur lesen</h3>
+          <p>DAO-Pattern, MVP, Singleton und JDBC im bestehenden Code wiederfinden und nachvollziehen.</p>
+        </div>
+        <div class="area">
+          <div class="key">B · Erweitern</div>
+          <h3>Pfleger-Modul</h3>
+          <p>Ein vollständiges CRUD-Modul für Pflegekräfte ergänzen — eingebettet in die vorhandene Architektur.</p>
+        </div>
+        <div class="area">
+          <div class="key">C · Absichern</div>
+          <h3>Login &amp; Datenschutz</h3>
+          <p>Login mit gehashten Passwörtern umsetzen; DSGVO-Verstöße priorisieren und dokumentieren.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 4: Ablauf ============ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Ablauf</div>
+      <h2>Fünf Arbeitsblätter, aufeinander aufbauend.</h2>
+
+      <table class="plan">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Thema</th>
+            <th>Zeit</th>
+            <th>Inhalt</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="id">AB 01</td>
+            <td class="topic">Architektur</td>
+            <td class="hours">~4 UStd</td>
+            <td class="what">DAO, MVP, Singleton im Code lesen.</td>
+          </tr>
+          <tr>
+            <td class="id">AB 02</td>
+            <td class="topic">Datenschutz</td>
+            <td class="hours">~3–4 UStd</td>
+            <td class="what">DSGVO-Grundlagen + Verstöße in NHPlus identifizieren.</td>
+          </tr>
+          <tr>
+            <td class="id">AB 03</td>
+            <td class="topic">Planung</td>
+            <td class="hours">~4–5 UStd</td>
+            <td class="what">User Stories, Akzeptanzkriterien, Tasks und Testfälle formulieren.</td>
+          </tr>
+          <tr>
+            <td class="id">AB 04</td>
+            <td class="topic">Implementierung</td>
+            <td class="hours">~9–12 UStd</td>
+            <td class="what">Pfleger-Modul und Login-System bauen.</td>
+          </tr>
+          <tr>
+            <td class="id">AB 05</td>
+            <td class="topic">Testen</td>
+            <td class="hours">~3 UStd</td>
+            <td class="what">Manuelle Tests, JUnit-Tests, Retrospektive.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ Slide 5: Lernziele ============ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Lernziele</div>
+      <h2>Was ihr am Ende könnt.</h2>
+
+      <div class="skills">
+        <div class="skill">
+          <div class="tag">Architektur</div>
+          <h4>Entwurfsmuster erkennen</h4>
+          <p>DAO, MVP, Singleton, Factory in einem fremden Projekt lesen und benennen.</p>
+        </div>
+        <div class="skill">
+          <div class="tag">Persistenz</div>
+          <h4>Datenbank über JDBC</h4>
+          <p>Eine relationale Datenbank programmatisch ansprechen, mit PreparedStatements arbeiten.</p>
+        </div>
+        <div class="skill">
+          <div class="tag">Recht &amp; Technik</div>
+          <h4>DSGVO praktisch</h4>
+          <p>Aus Artikeln technische Anforderungen ableiten und im Code umsetzen.</p>
+        </div>
+        <div class="skill">
+          <div class="tag">Planung</div>
+          <h4>User Stories</h4>
+          <p>Akzeptanzkriterien, Tasks und Testfälle aus einer User Story ableiten.</p>
+        </div>
+        <div class="skill">
+          <div class="tag">Kollaboration</div>
+          <h4>Team-Workflow mit Git</h4>
+          <p>Feature-Branches, Pull Requests, Kopplungspunkte abstimmen.</p>
+        </div>
+        <div class="skill">
+          <div class="tag">Qualität</div>
+          <h4>Systematisch testen</h4>
+          <p>Manuelle Tests durchführen, JUnit-Tests für DAO-Klassen schreiben.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 6: Bewertung ============ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Bewertung</div>
+      <h2>Wie sich die Note zusammensetzt.</h2>
+
+      <div class="bars">
+        <div class="bar-row">
+          <div class="lbl">AB 01 — Architekturverständnis</div>
+          <div class="track"><div class="fill" style="width: 22.2%;"></div></div>
+          <div class="pct">10 %</div>
+        </div>
+        <div class="bar-row">
+          <div class="lbl">AB 02 — DSGVO-Analyse</div>
+          <div class="track"><div class="fill" style="width: 22.2%;"></div></div>
+          <div class="pct">10 %</div>
+        </div>
+        <div class="bar-row">
+          <div class="lbl">AB 03 — Planung</div>
+          <div class="track"><div class="fill" style="width: 44.4%;"></div></div>
+          <div class="pct">20 %</div>
+        </div>
+        <div class="bar-row">
+          <div class="lbl">AB 04 — Implementierung</div>
+          <div class="track"><div class="fill" style="width: 100%;"></div></div>
+          <div class="pct">45 %</div>
+        </div>
+        <div class="bar-row">
+          <div class="lbl">AB 05 — Testen &amp; Reflexion</div>
+          <div class="track"><div class="fill" style="width: 33.3%;"></div></div>
+          <div class="pct">15 %</div>
+        </div>
+      </div>
+
+      <p class="bewertung-note">
+        Details und Kriterien (Sehr gut / Ausreichend / Nicht bestanden) findet ihr im <code>doc/Bewertungsraster.md</code>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ Slide 7: Workflow ============ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Arbeitsweise</div>
+      <h2>Feste Teams, gemeinsames Repo.</h2>
+
+      <div class="workflow">
+        <div class="panel">
+          <h3>Team</h3>
+          <ul>
+            <li>3er-Gruppen über alle Arbeitsblätter</li>
+            <li><b>Jede:r committet selbst</b> — die Git-Historie wird ausgewertet</li>
+            <li><mark>Feature-Branches und Pull Requests sind Pflicht</mark> (siehe AB 04, Git-Workflow)</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3>Repository &amp; Abgabe</h3>
+          <ul>
+            <li>Forkt oder klont das Repo, hinterlegt den Link in <b>itsLearning</b></li>
+            <li>Antworten in <code>abgabe/AB01.md</code> – <code>AB05.md</code></li>
+            <li>Aufgaben in <code>doc/</code> bleiben unverändert</li>
+            <li>Javadoc für jede neu implementierte Klasse</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 8: Heute ============ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Heute</div>
+      <h2>Vier Schritte zum Start.</h2>
+
+      <ol class="steps">
+        <li>
+          <div>
+            <h4>Gruppen bilden</h4>
+            <p>3er-Teams für die nächsten ~6 Wochen festlegen.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h4>Repository forken &amp; in itsLearning hinterlegen</h4>
+            <p>Ein Link pro Gruppe; alle Mitglieder als Collaborator.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h4>NHPlus in IntelliJ starten</h4>
+            <p>Run-Button drücken, durchklicken — was kann die App, was nicht?</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h4>AB 01 öffnen</h4>
+            <p><code>doc/AB01-Analyse-der-Architektur.md</code> — Einstieg über das DAO-Pattern.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ Slide 9: Fragen ============ -->
+  <section class="slide end">
+    <div class="slide-inner">
+      <div class="eyebrow">Vor dem Start</div>
+      <h1>Fragen?</h1>
+      <p class="lede" style="margin-top: 14px;">
+        Nutzt diesen Moment — danach geht es in die Arbeitsblätter.
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<div class="progress" id="progress"></div>
+<div class="hint">
+  <kbd>←</kbd> <kbd>→</kbd> navigieren · <kbd>F</kbd> Vollbild
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const progress = document.getElementById('progress');
+  const pagenum = document.getElementById('pagenum');
+  let current = 0;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => go(i));
+    progress.appendChild(d);
+  });
+  const dots = progress.querySelectorAll('.dot');
+
+  const total = String(slides.length).padStart(2, '0');
+  function updatePageNum() {
+    pagenum.textContent = String(current + 1).padStart(2, '0') + ' / ' + total;
+  }
+  updatePageNum();
+
+  function go(i) {
+    if (i < 0 || i >= slides.length || i === current) return;
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    updatePageNum();
+  }
+
+  function next() { go(Math.min(current + 1, slides.length - 1)); }
+  function prev() { go(Math.max(current - 1, 0)); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') { go(0); }
+    else if (e.key === 'End') { go(slides.length - 1); }
+    else if (e.key.toLowerCase() === 'f') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => tx = e.touches[0].clientX);
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) < 40) return;
+    if (dx < 0) next(); else prev();
+  });
+</script>
+</body>
+</html>
