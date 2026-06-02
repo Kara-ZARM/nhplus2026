@@ -25,7 +25,7 @@
   nur andere Domäne.
 -->
 
-<AnchorPane prefHeight="500.0" prefWidth="855.0" stylesheets="@Application.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="500.0" prefWidth="855.0" stylesheets="@Application.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hitec.nhplus.controller.AllCaregiverController">
    <children>
       <TableView fx:id="tableView" editable="true" layoutX="31.0" layoutY="40.0" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="80.0">
         <columns>
