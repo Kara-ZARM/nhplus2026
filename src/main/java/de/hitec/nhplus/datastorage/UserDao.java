@@ -65,11 +65,14 @@ public class UserDao extends DaoImp<User>{
     protected PreparedStatement getCreateStatement(User user) {
         PreparedStatement preparedStatement = null;
         try {
-            final String SQL = "INSERT INTO user () " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            final String SQL = "INSERT INTO user (username, password_hash, salt, role, created_at) " +
+                    "VALUES (?, ?, ?, ?, ?)";
             preparedStatement = this.connection.prepareStatement(SQL);
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPasswordHash());
+            preparedStatement.setString(3, user.getSalt());
+            preparedStatement.setString(4, user.getRole().name());
+            preparedStatement.setString(5, user.getCreatedAt());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

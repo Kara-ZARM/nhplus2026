@@ -94,7 +94,7 @@ public class SetUpDB {
                 "   salt TEXT NOT NULL, " +
                 "   role TEXT NOT NULL, " +
                 "   created_at TEXT NOT NULL, " +
-                "   last_login TEXT NOT NULL " +
+                "   last_login TEXT " +
                 ");";
         try (Statement statement = connection.createStatement()){
             statement.execute(SQL);

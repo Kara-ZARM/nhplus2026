@@ -69,4 +69,9 @@ public class User {
 
     public String getSalt(){return this.salt.get();}
 
+    public Role getRole(){return this.role;}
+
+    public String getCreatedAt(){return this.created_at.get();}
+
+    public String getLastLogin(){return this.last_login.get();}
 }
