@@ -144,6 +144,7 @@ public class SetUpDB {
         try{
             UserDao dao = DaoFactory.getDaoFactory().createUserDao();
             dao.create(new User("admin","placeholder",PasswordUtil.generateSalt(), adminRole,currentDate));
+            dao.create(new User("user", "placeholder",PasswordUtil.generateSalt(),userRole,currentDate));
         } catch (SQLException exception){
             exception.printStackTrace();
         }
