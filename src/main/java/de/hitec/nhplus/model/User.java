@@ -63,15 +63,27 @@ public class User {
         this.last_login = new SimpleStringProperty(DateConverter.convertLocalDateToString(last_login));
     }
 
+    public long getUid(){return uid.get();}
+
     public String getUsername(){return this.username.get();}
+
+    public void setUsername(String username){this.username.set(username);}
 
     public String getPasswordHash(){return this.password_hash.get();}
 
+    public void setPasswordHash(String passwordHash){this.password_hash.set(passwordHash);}
+
     public String getSalt(){return this.salt.get();}
 
+    public void setSalt(String salt){this.salt.set(salt);}
+
     public Role getRole(){return this.role;}
+
+    public void setRole(Role role){this.role = role;}
 
     public String getCreatedAt(){return this.created_at.get();}
 
     public String getLastLogin(){return this.last_login.get();}
+
+    public void setLastLogin(String lastLogin){this.last_login.set(lastLogin);}
 }

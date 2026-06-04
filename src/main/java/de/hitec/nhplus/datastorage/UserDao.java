@@ -2,6 +2,7 @@ package de.hitec.nhplus.datastorage;
 
 import de.hitec.nhplus.model.User;
 import de.hitec.nhplus.utils.DateConverter;
+import de.hitec.nhplus.utils.PasswordUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -81,21 +82,92 @@ public class UserDao extends DaoImp<User>{
 
     @Override
     protected PreparedStatement getReadByIDStatement(long uid){
-        return null;
+        PreparedStatement preparedStatement = null;
+        try{
+            final String SQL = "SELECT * FROM user WHERE uid = ?";
+            preparedStatement = this.connection.prepareStatement(SQL);
+            preparedStatement.setLong(1,uid);
+        } catch (SQLException exception){
+            exception.printStackTrace();
+        }
+        return preparedStatement;
     }
 
     @Override
     protected PreparedStatement getReadAllStatement(){
-        return null;
+        PreparedStatement statement = null;
+        try{
+            final String SQL = "SELECT * FROM user";
+            statement = this.connection.prepareStatement(SQL);
+        } catch (SQLException exception){
+            exception.printStackTrace();
+        }
+        return statement;
     }
 
     @Override
     protected PreparedStatement getUpdateStatement(User user){
-        return null;
+        PreparedStatement preparedStatement = null;
+        try{
+            final String SQL =
+                    "UPDATE user SET " +
+                            "username = ?, " +
+                            "role = ? " +
+                            "WHERE uid = ?";
+            preparedStatement = this.connection.prepareStatement(SQL);
+            preparedStatement.setString(1, user.getUsername());
+            preparedStatement.setString(2, user.getRole().name());
+            preparedStatement.setLong(3, user.getUid());
+        } catch (SQLException exception){
+            exception.printStackTrace();
+        }
+        return preparedStatement;
     }
 
     @Override
     protected PreparedStatement getDeleteStatement(long uid){
-        return null;
+        PreparedStatement preparedStatement = null;
+        try{
+            final String SQL = "DELETE FROM user WHERE uid = ?";
+            preparedStatement = this.connection.prepareStatement(SQL);
+            preparedStatement.setLong(1, uid);
+        } catch (SQLException exception){
+            exception.printStackTrace();
+        }
+        return preparedStatement;
+    }
+
+    protected PreparedStatement getPasswordUpdateStatement(User user){
+        PreparedStatement preparedStatement = null;
+        try{
+            final String SQL =
+                    "UPDATE user SET " +
+                            "password_hash = ?, " +
+                            "salt = ? " +
+                            "WHERE uid = ?";
+            preparedStatement = this.connection.prepareStatement(SQL);
+            preparedStatement.setString(1, user.getPasswordHash());
+            preparedStatement.setString(2, PasswordUtil.generateSalt());
+            preparedStatement.setLong(3, user.getUid());
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return preparedStatement;
+    }
+
+    protected PreparedStatement getLastLoginUpdateStatement(User user){
+        PreparedStatement preparedStatement = null;
+        try{
+            final String SQL =
+                    "UPDATE user SET " +
+                            "last_login = ? " +
+                            "WHERE uid = ?";
+            preparedStatement = this.connection.prepareStatement(SQL);
+            preparedStatement.setString(1, user.getLastLogin());
+            preparedStatement.setLong(2, user.getUid());
+        } catch (SQLException exception){
+            exception.printStackTrace();
+        }
+        return preparedStatement;
     }
 }
