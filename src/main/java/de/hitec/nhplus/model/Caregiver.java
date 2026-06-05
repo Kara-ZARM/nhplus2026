@@ -18,9 +18,42 @@ public class Caregiver extends Person{
     private final SimpleStringProperty phoneNumber;
     private final SimpleStringProperty qualification;
 
+    /**
+     * Constructor to initiate an object of class <code>Caregiver</code> with the given parameter. Use this constructor
+     * to initiate objects, which are not persisted yet, because it will not have a caregiver id (cid).
+     *
+     * @param firstName First name of the caregiver.
+     * @param surname Last name of the caregiver.
+     * @param dateOfBirth Date of birth of the caregiver.
+     * @param street Street of the caregiver
+     * @param postalcode Postalcode of the caregiver
+     * @param city City of the caregiver
+     * @param taxid Tax id of the caregiver
+     * @param phoneNumber Phone number of the caregiver
+     * @param qualification Qualification of the caregiver
+     */
     public Caregiver(String firstName, String surname, LocalDate dateOfBirth, String street, String postalcode, String city, String taxid, String phoneNumber, String qualification) {
+        this(0,firstName, surname, dateOfBirth, street, postalcode, city, taxid, phoneNumber, qualification);
+    }
+
+    /**
+     * Constructor to initiate an object of class <code>Caregiver</code> with the given parameter. Use this constructor
+     * to initiate objects, which are arlready persisted and have a caregiver id (cid).
+     *
+     * @param cid Caregiver id.
+     * @param firstName First name of the caregiver.
+     * @param surname Last name of the caregiver.
+     * @param dateOfBirth Date of birth of the caregiver.
+     * @param street Street of the caregiver.
+     * @param postalcode Postalcode of the caregiver.
+     * @param city City of the caregiver.
+     * @param taxid Tax id of the caregiver.
+     * @param phoneNumber Phone number of the caregiver.
+     * @param qualification Qualification of the caregiver.
+     */
+    public Caregiver(long cid, String firstName, String surname, LocalDate dateOfBirth, String street, String postalcode, String city, String taxid, String phoneNumber, String qualification) {
         super(firstName, surname);
-        this.cid = new SimpleLongProperty(0);
+        this.cid = new SimpleLongProperty(cid);
         this.dateOfBirth = new SimpleStringProperty(DateConverter.convertLocalDateToString(dateOfBirth));
         this.street = new SimpleStringProperty(street);
         this.postalcode = new SimpleStringProperty(postalcode);
@@ -46,6 +79,11 @@ public class Caregiver extends Person{
         return dateOfBirth;
     }
 
+    /**
+     * Stores the given string as new <code>birthOfDate</code>.
+     *
+     * @param dateOfBirth as string in the following format: YYYY-MM-DD.
+     */
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth.set(dateOfBirth);
     }
