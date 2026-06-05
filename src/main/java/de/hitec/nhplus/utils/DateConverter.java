@@ -10,6 +10,9 @@ public class DateConverter {
     private static final String TIME_FORMAT = "HH:mm";
 
     public static LocalDate convertStringToLocalDate(String date) {
+        if (date == null){
+            return null;
+        }
         return LocalDate.parse(date, DateTimeFormatter.ofPattern(DATE_FORMAT));
     }
 
@@ -18,6 +21,9 @@ public class DateConverter {
     }
 
     public static String convertLocalDateToString(LocalDate date) {
+        if (date == null){
+            return null;
+        }
         return date.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
     }
 

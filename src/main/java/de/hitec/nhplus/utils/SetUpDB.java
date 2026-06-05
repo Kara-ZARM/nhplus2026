@@ -113,7 +113,7 @@ public class SetUpDB {
     private static void setUpTableUser(Connection connection) {
         final String SQL = "CREATE TABLE IF NOT EXISTS user (" +
                 "   uid INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "   username TEXT NOT NULL, " +
+                "   username TEXT NOT NULL UNIQUE, " +
                 "   password_hash TEXT NOT NULL, " +
                 "   salt TEXT NOT NULL, " +
                 "   role TEXT NOT NULL, " +
@@ -176,8 +176,10 @@ public class SetUpDB {
         LocalDate currentDate = LocalDate.now();
         try{
             UserDao dao = DaoFactory.getDaoFactory().createUserDao();
-            dao.create(new User("admin","placeholder",PasswordUtil.generateSalt(), adminRole,currentDate));
-            dao.create(new User("user", "placeholder",PasswordUtil.generateSalt(),userRole,currentDate));
+            String newSalt = PasswordUtil.generateSalt();
+            dao.create(new User("admin",PasswordUtil.hash("placeholder", newSalt),newSalt, adminRole,currentDate));
+            newSalt = PasswordUtil.generateSalt();
+            dao.create(new User("user", PasswordUtil.hash("user", newSalt),newSalt,userRole,currentDate));
         } catch (SQLException exception){
             exception.printStackTrace();
         }
