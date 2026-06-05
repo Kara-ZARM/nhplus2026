@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class UserDao extends DaoImp<User>{
@@ -155,7 +156,8 @@ public class UserDao extends DaoImp<User>{
         return preparedStatement;
     }
 
-    protected PreparedStatement getLastLoginUpdateStatement(User user){
+    public void getLastLoginUpdateStatement(User user) throws SQLException {
+        user.setLastLogin(DateConverter.convertLocalDateToString(LocalDate.now()) + " " + DateConverter.convertLocalTimeToString(LocalTime.now()));
         PreparedStatement preparedStatement = null;
         try{
             final String SQL =
@@ -168,7 +170,7 @@ public class UserDao extends DaoImp<User>{
         } catch (SQLException exception){
             exception.printStackTrace();
         }
-        return preparedStatement;
+        preparedStatement.executeUpdate();
     }
 
     public User findByUsername(String username) throws SQLException{

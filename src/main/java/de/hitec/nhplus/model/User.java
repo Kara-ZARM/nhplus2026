@@ -4,7 +4,9 @@ import de.hitec.nhplus.utils.DateConverter;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
 * User Class to use for the Login process.
@@ -30,16 +32,15 @@ public class User {
      * @param username Username used for Login.
      * @param password_hash Hashed password of the user.
      * @param salt Randomized salt value.
-     * @param created_at Date the user was created.
      * @param role The role of the user to restrict access.
      */
-    public User(String username, String password_hash, String salt, Role role, LocalDate created_at){
+    public User(String username, String password_hash, String salt, Role role){
         this.uid = new SimpleLongProperty(0);
         this.username = new SimpleStringProperty(username);
         this.password_hash = new SimpleStringProperty(password_hash);
         this.salt = new SimpleStringProperty(salt);
         this.role = role;
-        this.created_at = new SimpleStringProperty(DateConverter.convertLocalDateToString(created_at));
+        this.created_at = new SimpleStringProperty(DateConverter.convertLocalDateToString(LocalDate.now()));
     }
 
     /**

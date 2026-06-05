@@ -177,9 +177,9 @@ public class SetUpDB {
         try{
             UserDao dao = DaoFactory.getDaoFactory().createUserDao();
             String newSalt = PasswordUtil.generateSalt();
-            dao.create(new User("admin",PasswordUtil.hash("placeholder", newSalt),newSalt, adminRole,currentDate));
+            dao.create(new User("admin",PasswordUtil.hash("placeholder", newSalt),newSalt, adminRole));
             newSalt = PasswordUtil.generateSalt();
-            dao.create(new User("user", PasswordUtil.hash("user", newSalt),newSalt,userRole,currentDate));
+            dao.create(new User("user", PasswordUtil.hash("user", newSalt),newSalt,userRole));
         } catch (SQLException exception){
             exception.printStackTrace();
         }
