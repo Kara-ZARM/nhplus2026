@@ -72,16 +72,16 @@ public class SetUpDB {
     }
 
     private static void setUpTableCaregiver(Connection connection) {
-        final String SQL = "CREATE TABLE IF NOT EXTISTS caregiver (" +
+        final String SQL = "CREATE TABLE IF NOT EXISTS caregiver (" +
                 "   cid INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "   firstname TEXT NOT NULL, " +
                 "   surname TEXT NOT NULL, " +
                 "   dateOfBirth TEXT NOT NULL, " +
                 "   street TEXT NOT NULL, " +
-                "   postalcode TEXT NOT NULL" +
-                "   city TEXT NOT NULL" +
-                "   taxid TEXT NOT NULL" +
-                "   phonenumber TEXT NOT NULL" +
+                "   postalcode TEXT NOT NULL, " +
+                "   city TEXT NOT NULL, " +
+                "   taxid TEXT NOT NULL, " +
+                "   phonenumber TEXT NOT NULL, " +
                 "   qualification TEXT NOT NULL" +
                 ");";
         try (Statement statement = connection.createStatement()) {
