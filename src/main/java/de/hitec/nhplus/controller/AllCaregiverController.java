@@ -198,8 +198,8 @@ public class AllCaregiverController {
      * @param event Event including the changed object and the change.
      */
     @FXML
-    public void handleOnEditAssets(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setTaxclass(event.getNewValue());
+    public void handleOnEditCaregiver(TableColumn.CellEditEvent<Caregiver, String> event) {
+        event.getRowValue().setTaxid(event.getNewValue());
         this.doUpdate(event);
     }
 
@@ -251,7 +251,7 @@ public class AllCaregiverController {
         Caregiver selectedItem = this.tableView.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             try {
-                DaoFactory.getDaoFactory().createCaregiverDao().deleteById(selectedItem.getPid());
+                DaoFactory.getDaoFactory().createCaregiverDao().deleteById(selectedItem.getCid());
                 this.tableView.getItems().remove(selectedItem);
             } catch (SQLException exception) {
                 exception.printStackTrace();
@@ -268,15 +268,16 @@ public class AllCaregiverController {
     public void handleAdd() {
         String surname = this.textFieldSurname.getText();
         String firstName = this.textFieldFirstName.getText();
+        String phone = this.textFieldPhone.getText();
         String birthday = this.textFieldDateOfBirth.getText();
         LocalDate date = DateConverter.convertStringToLocalDate(birthday);
         String street = this.textFieldStreet.getText();
-        int postalCode = Integer.parseInt(this.textFieldPostalCode.getText());
+        String postalCode = this.textFieldPostalCode.getText();
         String city = this.textFieldCity.getText();
-        String roomNumber = this.textFieldTaxClass.getText();
-        String assets = this.textFieldQualification.getText();
+        String taxclass = this.textFieldTaxClass.getText();
+        String qualification = this.textFieldQualification.getText();
         try {
-            this.dao.create(new Caregiver(firstName, surname, date, careLevel, roomNumber, assets));
+            this.dao.create(new Caregiver(firstName, surname, date, street, postalCode, city, taxclass, phone, qualification ));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
