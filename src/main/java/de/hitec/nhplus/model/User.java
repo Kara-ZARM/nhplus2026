@@ -4,9 +4,7 @@ import de.hitec.nhplus.utils.DateConverter;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 /**
 * User Class to use for the Login process.
@@ -22,7 +20,7 @@ public class User {
         USER
     };
     private Role role;
-    private SimpleStringProperty created_at;
+    private final SimpleStringProperty CREATED_AT;
     private SimpleStringProperty last_login;
 
     /**
@@ -40,7 +38,7 @@ public class User {
         this.password_hash = new SimpleStringProperty(password_hash);
         this.salt = new SimpleStringProperty(salt);
         this.role = role;
-        this.created_at = new SimpleStringProperty(DateConverter.convertLocalDateToString(LocalDate.now()));
+        this.CREATED_AT = new SimpleStringProperty(DateConverter.convertLocalDateToString(LocalDate.now()));
     }
 
     /**
@@ -60,7 +58,7 @@ public class User {
         this.password_hash = new SimpleStringProperty(password_hash);
         this.salt = new SimpleStringProperty(salt);
         this.role = role;
-        this.created_at = new SimpleStringProperty(DateConverter.convertLocalDateToString(created_at));
+        this.CREATED_AT = new SimpleStringProperty(DateConverter.convertLocalDateToString(created_at));
         this.last_login = new SimpleStringProperty(DateConverter.convertLocalDateToString(last_login));
     }
 
@@ -82,7 +80,7 @@ public class User {
 
     public void setRole(Role role){this.role = role;}
 
-    public String getCreatedAt(){return this.created_at.get();}
+    public String getCreatedAt(){return this.CREATED_AT.get();}
 
     public String getLastLogin(){return this.last_login.get();}
 
