@@ -81,7 +81,7 @@
                 <HBox alignment="TOP_RIGHT" prefWidth="190.0" spacing="10.0" HBox.hgrow="ALWAYS">
                     <children>
                         <Button fx:id="buttonAdd" mnemonicParsing="false" onAction="#handleAdd" prefWidth="80.0" text="Hinzufügen"/>
-                        <Button fx:id="buttonDelete" mnemonicParsing="false" onAction="#handleDelete" prefWidth="80.0" text="Löschen"/>
+                        <Button fx:id="buttonDelete" mnemonicParsing="false" onAction="#alertForDelete" prefWidth="80.0" text="Löschen"/>
                     </children>
                 </HBox>
             </children>

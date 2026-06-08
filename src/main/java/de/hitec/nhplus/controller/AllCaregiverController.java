@@ -9,15 +9,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * The <code>AllCaregiverController</code> contains the entire logic of the caregiver view. It determines which data is displayed and how to react to events.
@@ -272,6 +270,7 @@ public class AllCaregiverController {
      */
     @FXML
     public void handleDelete() {
+
         Caregiver selectedItem = this.tableView.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             try {
@@ -283,6 +282,18 @@ public class AllCaregiverController {
         }
     }
 
+    @FXML
+    public void alertForDelete() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+
+        alert.setHeaderText("Pflegekraft endgültig löschen?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            handleDelete();
+        }
+
+    }
     /**
      * This method handles the events fired by the button to add a caregiver. It collects the data from the
      * <code>TextField</code>s, creates an object of class <code>Caregiver</code> of it and passes the object to
