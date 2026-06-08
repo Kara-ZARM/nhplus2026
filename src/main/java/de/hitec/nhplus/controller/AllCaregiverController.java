@@ -192,6 +192,30 @@ public class AllCaregiverController {
         this.doUpdate(event);
     }
 
+    @FXML
+    public void handleOnEditPhoneNumber(TableColumn.CellEditEvent<Caregiver, String> event) {
+        event.getRowValue().setPhoneNumber(event.getNewValue());
+        this.doUpdate(event);
+    }
+
+    @FXML
+    public void handleOnEditStreet(TableColumn.CellEditEvent<Caregiver, String> event) {
+        event.getRowValue().setStreet(event.getNewValue());
+        this.doUpdate(event);
+    }
+
+    @FXML
+    public void handleOnEditPostalcode(TableColumn.CellEditEvent<Caregiver, String> event) {
+        event.getRowValue().setPostalcode(event.getNewValue());
+        this.doUpdate(event);
+    }
+
+    @FXML
+    public void handleOnEditCity(TableColumn.CellEditEvent<Caregiver, String> event) {
+        event.getRowValue().setCity(event.getNewValue());
+        this.doUpdate(event);
+    }
+
     /**
      * When a cell of the column with taxidwas changed, this method will be called, to persist the change.
      *
