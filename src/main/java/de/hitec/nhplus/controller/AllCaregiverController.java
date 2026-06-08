@@ -9,15 +9,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * The <code>AllCaregiverController</code> contains the entire logic of the caregiver view. It determines which data is displayed and how to react to events.
@@ -36,7 +34,7 @@ public class AllCaregiverController {
     private TableColumn<Caregiver, String> columnSurname;
 
     @FXML
-    private TableColumn<Caregiver, String> columnPhone;
+    private TableColumn<Caregiver, String> columnPhoneNumber;
 
     @FXML
     private TableColumn<Caregiver, String> columnDateOfBirth;
@@ -51,7 +49,7 @@ public class AllCaregiverController {
     private TableColumn<Caregiver, String> columnCity;
 
     @FXML
-    private TableColumn<Caregiver, String> columnTaxClass;
+    private TableColumn<Caregiver, String> columnTaxId;
 
     @FXML
     private TableColumn<Caregiver, String> columnQualification;
@@ -69,7 +67,7 @@ public class AllCaregiverController {
     private TextField textFieldFirstName;
 
     @FXML
-    private TextField textFieldPhone;
+    private TextField textFieldPhoneNumber;
 
     @FXML
     private TextField textFieldDateOfBirth;
@@ -84,7 +82,7 @@ public class AllCaregiverController {
     private TextField textFieldCity;
 
     @FXML
-    private TextField textFieldTaxClass;
+    private TextField textFieldTaxId;
 
     @FXML
     private TextField textFieldQualification;
@@ -111,8 +109,8 @@ public class AllCaregiverController {
         this.columnSurname.setCellValueFactory(new PropertyValueFactory<>("surname"));
         this.columnSurname.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        this.columnPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        this.columnPhone.setCellFactory(TextFieldTableCell.forTableColumn());
+        this.columnPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        this.columnPhoneNumber.setCellFactory(TextFieldTableCell.forTableColumn());
 
         this.columnDateOfBirth.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
         this.columnDateOfBirth.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -126,8 +124,8 @@ public class AllCaregiverController {
         this.columnCity.setCellValueFactory(new PropertyValueFactory<>("city"));
         this.columnCity.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        this.columnTaxClass.setCellValueFactory(new PropertyValueFactory<>("taxclass"));
-        this.columnTaxClass.setCellFactory(TextFieldTableCell.forTableColumn());
+        this.columnTaxId.setCellValueFactory(new PropertyValueFactory<>("taxid"));
+        this.columnTaxId.setCellFactory(TextFieldTableCell.forTableColumn());
 
         this.columnQualification.setCellValueFactory(new PropertyValueFactory<>("qualification"));
         this.columnQualification.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -149,12 +147,12 @@ public class AllCaregiverController {
                 AllCaregiverController.this.buttonAdd.setDisable(!AllCaregiverController.this.areInputDataValid());
         this.textFieldSurname.textProperty().addListener(inputNewCaregiverListener);
         this.textFieldFirstName.textProperty().addListener(inputNewCaregiverListener);
-        this.textFieldPhone.textProperty().addListener(inputNewCaregiverListener);
+        this.textFieldPhoneNumber.textProperty().addListener(inputNewCaregiverListener);
         this.textFieldDateOfBirth.textProperty().addListener(inputNewCaregiverListener);
         this.textFieldStreet.textProperty().addListener(inputNewCaregiverListener);
         this.textFieldPostalCode.textProperty().addListener(inputNewCaregiverListener);
         this.textFieldCity.textProperty().addListener(inputNewCaregiverListener);
-        this.textFieldTaxClass.textProperty().addListener(inputNewCaregiverListener);
+        this.textFieldTaxId.textProperty().addListener(inputNewCaregiverListener);
         this.textFieldQualification.textProperty().addListener(inputNewCaregiverListener);
     }
 
@@ -166,8 +164,20 @@ public class AllCaregiverController {
 
     @FXML
     public void handleOnEditFirstname(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setFirstName(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setFirstName(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     /**
@@ -177,8 +187,20 @@ public class AllCaregiverController {
      */
     @FXML
     public void handleOnEditSurname(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setSurname(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setSurname(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     /**
@@ -188,19 +210,115 @@ public class AllCaregiverController {
      */
     @FXML
     public void handleOnEditDateOfBirth(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setDateOfBirth(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setDateOfBirth(event.getNewValue());
+            this.doUpdate(event);
+        }
+
+    }
+
+    @FXML
+    public void handleOnEditPhoneNumber(TableColumn.CellEditEvent<Caregiver, String> event) {
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setPhoneNumber(event.getNewValue());
+            this.doUpdate(event);
+        }
+
+    }
+
+    @FXML
+    public void handleOnEditStreet(TableColumn.CellEditEvent<Caregiver, String> event) {
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setStreet(event.getNewValue());
+            this.doUpdate(event);
+        }
+
+    }
+
+    @FXML
+    public void handleOnEditPostalcode(TableColumn.CellEditEvent<Caregiver, String> event) {
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setPostalcode(event.getNewValue());
+            this.doUpdate(event);
+        }
+
+    }
+
+    @FXML
+    public void handleOnEditCity(TableColumn.CellEditEvent<Caregiver, String> event) {
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setCity(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     /**
-     * When a cell of the column with taxclass was changed, this method will be called, to persist the change.
+     * When a cell of the column with taxidwas changed, this method will be called, to persist the change.
      *
      * @param event Event including the changed object and the change.
      */
     @FXML
-    public void handleOnEditCaregiver(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setTaxid(event.getNewValue());
-        this.doUpdate(event);
+    public void handleOnEditTaxid(TableColumn.CellEditEvent<Caregiver, String> event) {
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setTaxid(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     /**
@@ -209,9 +327,21 @@ public class AllCaregiverController {
      * @param event Event including the changed object and the change.
      */
     @FXML
-    public void handleOnEditAssets(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setQualification(event.getNewValue());
-        this.doUpdate(event);
+    public void handleOnEditQualification(TableColumn.CellEditEvent<Caregiver, String> event) {
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setQualification(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     /**
@@ -248,6 +378,7 @@ public class AllCaregiverController {
      */
     @FXML
     public void handleDelete() {
+
         Caregiver selectedItem = this.tableView.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             try {
@@ -259,6 +390,19 @@ public class AllCaregiverController {
         }
     }
 
+    @FXML
+    public void alertForDelete() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+
+        alert.setHeaderText("Pflegekraft endgültig löschen?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            handleDelete();
+        }
+
+    }
+
     /**
      * This method handles the events fired by the button to add a caregiver. It collects the data from the
      * <code>TextField</code>s, creates an object of class <code>Caregiver</code> of it and passes the object to
@@ -268,16 +412,16 @@ public class AllCaregiverController {
     public void handleAdd() {
         String surname = this.textFieldSurname.getText();
         String firstName = this.textFieldFirstName.getText();
-        String phone = this.textFieldPhone.getText();
+        String phone = this.textFieldPhoneNumber.getText();
         String birthday = this.textFieldDateOfBirth.getText();
         LocalDate date = DateConverter.convertStringToLocalDate(birthday);
         String street = this.textFieldStreet.getText();
         String postalCode = this.textFieldPostalCode.getText();
         String city = this.textFieldCity.getText();
-        String taxclass = this.textFieldTaxClass.getText();
+        String taxclass = this.textFieldTaxId.getText();
         String qualification = this.textFieldQualification.getText();
         try {
-            this.dao.create(new Caregiver(firstName, surname, date, street, postalCode, city, taxclass, phone, qualification ));
+            this.dao.create(new Caregiver(firstName, surname, date, street, postalCode, city, taxclass, phone, qualification));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -292,10 +436,11 @@ public class AllCaregiverController {
         this.textFieldFirstName.clear();
         this.textFieldSurname.clear();
         this.textFieldDateOfBirth.clear();
+        this.textFieldPhoneNumber.clear();
         this.textFieldStreet.clear();
         this.textFieldPostalCode.clear();
         this.textFieldCity.clear();
-        this.textFieldTaxClass.clear();
+        this.textFieldTaxId.clear();
         this.textFieldQualification.clear();
     }
 
@@ -309,9 +454,10 @@ public class AllCaregiverController {
         }
 
         return !this.textFieldFirstName.getText().isBlank() && !this.textFieldSurname.getText().isBlank() &&
-                !this.textFieldDateOfBirth.getText().isBlank() && !this.textFieldStreet.getText().isBlank() &&
-                !this.textFieldPostalCode.getText().isBlank() && !this.textFieldCity.getText().isBlank() &&
-                !this.textFieldTaxClass.getText().isBlank() && !this.textFieldQualification.getText().isBlank();
+                !this.textFieldDateOfBirth.getText().isBlank() && !this.textFieldPhoneNumber.getText().isBlank()
+                && !this.textFieldStreet.getText().isBlank() && !this.textFieldPostalCode.getText().isBlank()
+                && !this.textFieldCity.getText().isBlank() && !this.textFieldTaxId.getText().isBlank()
+                && !this.textFieldQualification.getText().isBlank();
     }
 
 
