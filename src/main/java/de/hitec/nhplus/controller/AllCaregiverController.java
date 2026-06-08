@@ -164,8 +164,20 @@ public class AllCaregiverController {
 
     @FXML
     public void handleOnEditFirstname(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setFirstName(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setFirstName(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     /**
@@ -175,8 +187,20 @@ public class AllCaregiverController {
      */
     @FXML
     public void handleOnEditSurname(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setSurname(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setSurname(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     /**
@@ -186,32 +210,92 @@ public class AllCaregiverController {
      */
     @FXML
     public void handleOnEditDateOfBirth(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setDateOfBirth(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setDateOfBirth(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     @FXML
     public void handleOnEditPhoneNumber(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setPhoneNumber(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setPhoneNumber(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     @FXML
     public void handleOnEditStreet(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setStreet(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setStreet(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     @FXML
     public void handleOnEditPostalcode(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setPostalcode(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setPostalcode(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     @FXML
     public void handleOnEditCity(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setCity(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setCity(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     /**
@@ -221,8 +305,20 @@ public class AllCaregiverController {
      */
     @FXML
     public void handleOnEditTaxid(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setTaxid(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setTaxid(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     /**
@@ -232,8 +328,20 @@ public class AllCaregiverController {
      */
     @FXML
     public void handleOnEditQualification(TableColumn.CellEditEvent<Caregiver, String> event) {
-        event.getRowValue().setQualification(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setQualification(event.getNewValue());
+            this.doUpdate(event);
+        }
+
     }
 
     /**
@@ -294,6 +402,7 @@ public class AllCaregiverController {
         }
 
     }
+
     /**
      * This method handles the events fired by the button to add a caregiver. It collects the data from the
      * <code>TextField</code>s, creates an object of class <code>Caregiver</code> of it and passes the object to
