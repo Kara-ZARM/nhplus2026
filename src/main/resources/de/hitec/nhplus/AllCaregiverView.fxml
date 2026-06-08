@@ -34,12 +34,12 @@
                 <TableColumn fx:id="columnId" maxWidth="1200.0" minWidth="5.0" prefWidth="5.0" text="ID"/>
                 <TableColumn fx:id="columnSurname" maxWidth="7500.0" minWidth="20.0" prefWidth="100.0" text="Nachname"/>
                 <TableColumn fx:id="columnFirstName" maxWidth="7500.0" prefWidth="75.0" text="Vorname"/>
-                <TableColumn fx:id="columnPhone" maxWidth="7500.0" prefWidth="75.0" text="Telefonnummer"/>
+                <TableColumn fx:id="columnPhoneNumber" maxWidth="7500.0" prefWidth="75.0" text="Telefonnummer"/>
                 <TableColumn fx:id="columnDateOfBirth" maxWidth="7500.0" prefWidth="75.0" text="Geburtstag"/>
                 <TableColumn fx:id="columnStreet" maxWidth="7500.0" prefWidth="75.0" text="Straße"/>
                 <TableColumn fx:id="columnPostalCode" maxWidth="7500.0" prefWidth="75.0" text="Postleitzahl"/>
                 <TableColumn fx:id="columnCity" maxWidth="7500.0" prefWidth="75.0" text="Stadt"/>
-                <TableColumn fx:id="columnTaxClass" maxWidth="7500.0" prefWidth="75.0" text="Steuerklasse"/>
+                <TableColumn fx:id="columnTaxId" maxWidth="7500.0" prefWidth="75.0" text="Steuerklasse"/>
                 <TableColumn fx:id="columnQualification" maxWidth="7500.0" prefWidth="75.0" text="Qualifikation"/>
             </columns>
             <columnResizePolicy>
@@ -63,12 +63,12 @@
                     <children>
                         <TextField fx:id="textFieldSurname" minWidth="150.0" prefHeight="26.0" prefWidth="200.0" promptText="Nachname" GridPane.columnIndex="1"/>
                         <TextField fx:id="textFieldFirstName" minWidth="150.0" prefHeight="26.0" prefWidth="200.0" promptText="Vorname" />
-                        <TextField fx:id="textFieldPhone" minWidth="150.0" prefHeight="26.0" prefWidth="200.0" promptText="Telefonnummer" GridPane.columnIndex="2"/>
+                        <TextField fx:id="textFieldPhoneNumber" minWidth="150.0" prefHeight="26.0" prefWidth="200.0" promptText="Telefonnummer" GridPane.columnIndex="2"/>
                         <TextField fx:id="textFieldDateOfBirth" minWidth="150.0" prefHeight="26.0" prefWidth="200.0" promptText="Geburtsdatum" GridPane.rowIndex="1"/>
                         <TextField fx:id="textFieldStreet" minWidth="150.0" prefHeight="26.0" prefWidth="200.0" promptText="Straße" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                         <TextField fx:id="textFieldPostalCode" minWidth="150.0" prefHeight="26.0" prefWidth="200.0" promptText="Postleitzahl" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                         <TextField fx:id="textFieldCity" minWidth="150.0" prefHeight="26.0" prefWidth="200.0" promptText="Stadt" GridPane.rowIndex="2"/>
-                        <TextField fx:id="textFieldTaxClass" minWidth="150.0" prefHeight="26.0" prefWidth="200.0" promptText="Steuerklasse" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <TextField fx:id="textFieldTaxId" minWidth="150.0" prefHeight="26.0" prefWidth="200.0" promptText="Steuerklasse" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                         <TextField fx:id="textFieldQualification" minWidth="150.0" prefHeight="26.0" prefWidth="200.0" promptText="Qualifikation" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                     </children>
                     <padding>
