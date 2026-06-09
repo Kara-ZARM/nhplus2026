@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -32,8 +33,8 @@ public class UserDao extends DaoImp<User>{
                 result.getString("password_hash"),
                 result.getString("salt"),
                 User.Role.valueOf(result.getString("role")),
-                DateConverter.convertStringToLocalDate(result.getString("created_at")),
-                DateConverter.convertStringToLocalDate(result.getString("last_login")));
+                DateConverter.convertStringToLocalDateTime(result.getString("created_at")),
+                DateConverter.convertStringToLocalDateTime(result.getString("last_login")));
     }
 
     /**
@@ -48,8 +49,8 @@ public class UserDao extends DaoImp<User>{
         ArrayList<User> list = new ArrayList<>();
         while (result.next()) {
             User.Role role = User.Role.valueOf(result.getString("role"));
-            LocalDate creationDate = DateConverter.convertStringToLocalDate(result.getString("created_at"));
-            LocalDate lastLogin = DateConverter.convertStringToLocalDate(result.getString("last_login"));
+            LocalDateTime creationDate = DateConverter.convertStringToLocalDateTime(result.getString("created_at"));
+            LocalDateTime lastLogin = DateConverter.convertStringToLocalDateTime(result.getString("last_login"));
             User user = new User(
                     result.getInt("uid"),
                     result.getString("username"),
@@ -157,7 +158,7 @@ public class UserDao extends DaoImp<User>{
     }
 
     public void getLastLoginUpdateStatement(User user) throws SQLException {
-        user.setLastLogin(DateConverter.convertLocalDateToString(LocalDate.now()) + " " + DateConverter.convertLocalTimeToString(LocalTime.now()));
+        user.setLastLogin(DateConverter.convertLocalDateTimeToString(LocalDateTime.now()));
         PreparedStatement preparedStatement = null;
         try{
             final String SQL =

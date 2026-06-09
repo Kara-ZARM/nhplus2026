@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
 <!--
   STUB-Vorlage für die Pfleger-Übersicht (AB 04, Workstream B).
@@ -46,7 +54,7 @@
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
             </columnResizePolicy>
         </TableView>
-        <HBox layoutX="623.0" layoutY="419.3999938964844" spacing="10.0" AnchorPane.bottomAnchor="15.0"
+        <HBox fx:id="HboxInsert" layoutX="623.0" layoutY="419.3999938964844" spacing="10.0" AnchorPane.bottomAnchor="15.0"
               AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
             <children>
                 <GridPane hgap="10.0" vgap="10.0">
@@ -80,8 +88,8 @@
                 </GridPane>
                 <HBox alignment="TOP_RIGHT" prefWidth="190.0" spacing="10.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Button fx:id="buttonAdd" mnemonicParsing="false" onAction="#handleAdd" prefWidth="80.0" text="Hinzufügen"/>
-                        <Button fx:id="buttonDelete" mnemonicParsing="false" onAction="#handleDelete" prefWidth="80.0" text="Löschen"/>
+                        <Button fx:id="buttonAdd" mnemonicParsing="false" onAction="#handleAdd" prefWidth="80.0" text="Hinzufügen" />
+                        <Button fx:id="buttonDelete" mnemonicParsing="false" onAction="#handleDelete" prefWidth="80.0" text="Löschen" />
                     </children>
                 </HBox>
             </children>

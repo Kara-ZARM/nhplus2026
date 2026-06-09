@@ -19,6 +19,8 @@ import java.sql.SQLException;
 
 public class LoginController {
 
+    private static User currentUser = null;
+
     @FXML
     private Button buttonLogin;
 
@@ -53,6 +55,7 @@ public class LoginController {
             password_hash = user.getPasswordHash();
             salt = user.getSalt();
             if(PasswordUtil.verify(password, salt, password_hash)){
+                currentUser = user;
                 dao.getLastLoginUpdateStatement(user);
                 FXMLLoader loader = new FXMLLoader(
                         getClass().getResource("/de/hitec/nhplus/MainWindowView.fxml"));
@@ -76,5 +79,11 @@ public class LoginController {
     public void showError(String message){
         labelError.setVisible(true);
         labelError.setText(message);
+    }
+
+    public static User getCurrentUser(){return currentUser;}
+
+    public static void resetCurrentUser(){
+        currentUser = null;
     }
 }

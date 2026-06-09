@@ -179,7 +179,7 @@ public class SetUpDB {
             String newSalt = PasswordUtil.generateSalt();
             dao.create(new User("admin",PasswordUtil.hash("placeholder", newSalt),newSalt, adminRole));
             newSalt = PasswordUtil.generateSalt();
-            dao.create(new User("user", PasswordUtil.hash("user", newSalt),newSalt,userRole));
+            dao.create(new User("user", PasswordUtil.hash("placeholder", newSalt),newSalt,userRole));
         } catch (SQLException exception){
             exception.printStackTrace();
         }
