@@ -17,6 +17,10 @@ import javafx.scene.control.PasswordField;
 
 import java.sql.SQLException;
 
+/**
+ * The <code>LoginController</code> contains the logic that handles the login and logout process.
+ */
+
 public class LoginController {
 
     private static User currentUser = null;
@@ -40,6 +44,16 @@ public class LoginController {
         dao = DaoFactory.getDaoFactory().createUserDao();
     }
 
+    /**
+     * The <code>handleLoginAttempt</code> method handles login attempts.
+     * It checks if the entered username in <code>textFieldUsername</code> exists and if it does,
+     * verifies if the calculated hash from the password in <code>passwordField</code> matches the stored hash.
+     * If the user does not exist, the <code>labelError</code> shows a "Wrong username" message.
+     * If the password does not match the stored hash, the <code>labelError</code> shows a "Wrong password" message.
+     * If everything is correct it stores the user that is logging in in <code>currentUser</code>,
+     * updates the <code>last_login</code> column of the user that is logging in,
+     * and sets the scene to <code>MainWindowView.fxml</code>.
+     */
     @FXML
     public void handleLoginAttempt(){
         String username = this.textFieldUsername.getText();
@@ -76,13 +90,24 @@ public class LoginController {
         }
     }
 
+    /**
+     * <code>showError</code> displays an error at the position of <code>labelError</code>.
+     * @param message is the message that is being displayed.
+     */
     public void showError(String message){
         labelError.setVisible(true);
         labelError.setText(message);
     }
 
+    /**
+     * <code>getCurrentUser</code> gets the currently logged in <code>User</code>.
+     * @return <code>User</code>
+     */
     public static User getCurrentUser(){return currentUser;}
 
+    /**
+     * <code>resetCurrentUser</code> sets the currently logged in <code>User</code> to null, for the purpose of clearing the cache.
+     */
     public static void resetCurrentUser(){
         currentUser = null;
     }

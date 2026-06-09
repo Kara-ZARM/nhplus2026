@@ -19,6 +19,11 @@ public class DateConverter {
         return LocalTime.parse(time, DateTimeFormatter.ofPattern(TIME_FORMAT));
     }
 
+    /**
+     * A method to convert a String to a LocalDateTime in the format of <code>DATETIME_FORMAT</code>.
+     * @param datetime is the String that will be converted to a LocalDateTime.
+     * @return <code>LocalDateTime</code>
+     */
     public static LocalDateTime convertStringToLocalDateTime(String datetime) {
         if (datetime == null){
             return null;
@@ -34,6 +39,11 @@ public class DateConverter {
         return time.format(DateTimeFormatter.ofPattern(TIME_FORMAT));
     }
 
+    /**
+     * A method to convert a LocalDateTime to a String in the format of <code>DATETIME_FORMAT</code>
+     * @param datetime is the LocalDateTime that will be converted to a String.
+     * @return <code>String</code>
+     */
     public static String convertLocalDateTimeToString(LocalDateTime datetime){
         if (datetime == null){
             return null;

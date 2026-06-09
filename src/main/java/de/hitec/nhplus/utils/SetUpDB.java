@@ -170,10 +170,12 @@ public class SetUpDB {
         }
     }
 
+    /**
+     * Both users intentionally have the same plain text password to show that the hashed password, that is saved in the database, is different for both.
+     */
     private static void setUpUsers(){
         User.Role userRole = User.Role.USER;
         User.Role adminRole = User.Role.ADMIN;
-        LocalDate currentDate = LocalDate.now();
         try{
             UserDao dao = DaoFactory.getDaoFactory().createUserDao();
             String newSalt = PasswordUtil.generateSalt();

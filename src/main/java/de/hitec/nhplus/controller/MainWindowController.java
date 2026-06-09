@@ -50,6 +50,10 @@ public class MainWindowController {
         }
     }
 
+    /**
+     * <code>handleLogout</code> handles the logout process, calls <code>resetCurrentUser</code> from <code>LoginController</code> and sets the scene to <code>LoginView.fxml</code>.
+     * @throws IOException
+     */
     @FXML
     private void handleLogout() throws IOException {
         LoginController.resetCurrentUser();
