@@ -2,15 +2,13 @@ package de.hitec.nhplus.controller;
 
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.PatientDao;
+import de.hitec.nhplus.utils.AlertBuilder;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import de.hitec.nhplus.model.Patient;
@@ -18,6 +16,7 @@ import de.hitec.nhplus.utils.DateConverter;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Optional;
 
 
 /**
@@ -112,7 +111,8 @@ public class AllPatientController {
         this.buttonDelete.setDisable(true);
         this.tableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Patient>() {
             @Override
-            public void changed(ObservableValue<? extends Patient> observableValue, Patient oldPatient, Patient newPatient) {;
+            public void changed(ObservableValue<? extends Patient> observableValue, Patient oldPatient, Patient newPatient) {
+                ;
                 AllPatientController.this.buttonDelete.setDisable(newPatient == null);
             }
         });
@@ -135,8 +135,18 @@ public class AllPatientController {
      */
     @FXML
     public void handleOnEditFirstname(TableColumn.CellEditEvent<Patient, String> event) {
-        event.getRowValue().setFirstName(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setFirstName(event.getNewValue());
+            this.doUpdate(event);
+        }
     }
 
     /**
@@ -146,8 +156,18 @@ public class AllPatientController {
      */
     @FXML
     public void handleOnEditSurname(TableColumn.CellEditEvent<Patient, String> event) {
-        event.getRowValue().setSurname(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setSurname(event.getNewValue());
+            this.doUpdate(event);
+        }
     }
 
     /**
@@ -157,8 +177,18 @@ public class AllPatientController {
      */
     @FXML
     public void handleOnEditDateOfBirth(TableColumn.CellEditEvent<Patient, String> event) {
-        event.getRowValue().setDateOfBirth(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setDateOfBirth(event.getNewValue());
+            this.doUpdate(event);
+        }
     }
 
     /**
@@ -168,8 +198,18 @@ public class AllPatientController {
      */
     @FXML
     public void handleOnEditCareLevel(TableColumn.CellEditEvent<Patient, String> event) {
-        event.getRowValue().setCareLevel(event.getNewValue());
-        this.doUpdate(event);
+        if (event.getNewValue().isBlank()) {
+
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setCareLevel(event.getNewValue());
+            this.doUpdate(event);
+        }
     }
 
     /**
@@ -178,9 +218,19 @@ public class AllPatientController {
      * @param event Event including the changed object and the change.
      */
     @FXML
-    public void handleOnEditRoomNumber(TableColumn.CellEditEvent<Patient, String> event){
-        event.getRowValue().setRoomNumber(event.getNewValue());
-        this.doUpdate(event);
+    public void handleOnEditRoomNumber(TableColumn.CellEditEvent<Patient, String> event) {
+        if (event.getNewValue().isBlank()) {
+
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setRoomNumber(event.getNewValue());
+            this.doUpdate(event);
+        }
     }
 
     /**
@@ -189,9 +239,19 @@ public class AllPatientController {
      * @param event Event including the changed object and the change.
      */
     @FXML
-    public void handleOnEditAssets(TableColumn.CellEditEvent<Patient, String> event){
-        event.getRowValue().setAssets(event.getNewValue());
-        this.doUpdate(event);
+    public void handleOnEditAssets(TableColumn.CellEditEvent<Patient, String> event) {
+        if (event.getNewValue().isBlank()) {
+
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+        } else {
+
+            event.getRowValue().setAssets(event.getNewValue());
+            this.doUpdate(event);
+        }
     }
 
     /**
@@ -228,13 +288,18 @@ public class AllPatientController {
      */
     @FXML
     public void handleDelete() {
-        Patient selectedItem = this.tableView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            try {
-                DaoFactory.getDaoFactory().createPatientDao().deleteById(selectedItem.getPid());
-                this.tableView.getItems().remove(selectedItem);
-            } catch (SQLException exception) {
-                exception.printStackTrace();
+
+        Optional<ButtonType> result = AlertBuilder.alertForDelete();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            Patient selectedItem = this.tableView.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                try {
+                    DaoFactory.getDaoFactory().createPatientDao().deleteById(selectedItem.getPid());
+                    this.tableView.getItems().remove(selectedItem);
+                } catch (SQLException exception) {
+                    exception.printStackTrace();
+                }
             }
         }
     }

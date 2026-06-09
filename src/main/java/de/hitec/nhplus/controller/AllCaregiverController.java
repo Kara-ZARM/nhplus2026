@@ -3,6 +3,7 @@ package de.hitec.nhplus.controller;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.CaregiverDao;
 import de.hitec.nhplus.model.Caregiver;
+import de.hitec.nhplus.utils.AlertBuilder;
 import de.hitec.nhplus.utils.DateConverter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -165,10 +166,9 @@ public class AllCaregiverController {
     @FXML
     public void handleOnEditFirstname(TableColumn.CellEditEvent<Caregiver, String> event) {
         if (event.getNewValue().isBlank()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
 
-            Optional<ButtonType> result = alert.showAndWait();
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 event.getTableView().refresh();
             }
@@ -188,15 +188,13 @@ public class AllCaregiverController {
     @FXML
     public void handleOnEditSurname(TableColumn.CellEditEvent<Caregiver, String> event) {
         if (event.getNewValue().isBlank()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
 
-            Optional<ButtonType> result = alert.showAndWait();
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 event.getTableView().refresh();
             }
         } else {
-
             event.getRowValue().setSurname(event.getNewValue());
             this.doUpdate(event);
         }
@@ -211,10 +209,9 @@ public class AllCaregiverController {
     @FXML
     public void handleOnEditDateOfBirth(TableColumn.CellEditEvent<Caregiver, String> event) {
         if (event.getNewValue().isBlank()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
 
-            Optional<ButtonType> result = alert.showAndWait();
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 event.getTableView().refresh();
             }
@@ -225,14 +222,17 @@ public class AllCaregiverController {
         }
 
     }
-
+    /**
+     * When a cell of the column with phonenumber was changed, this method will be called, to persist the change.
+     *
+     * @param event Event including the changed object and the change.
+     */
     @FXML
     public void handleOnEditPhoneNumber(TableColumn.CellEditEvent<Caregiver, String> event) {
         if (event.getNewValue().isBlank()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
 
-            Optional<ButtonType> result = alert.showAndWait();
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 event.getTableView().refresh();
             }
@@ -243,14 +243,17 @@ public class AllCaregiverController {
         }
 
     }
-
+    /**
+     * When a cell of the column with street was changed, this method will be called, to persist the change.
+     *
+     * @param event Event including the changed object and the change.
+     */
     @FXML
     public void handleOnEditStreet(TableColumn.CellEditEvent<Caregiver, String> event) {
         if (event.getNewValue().isBlank()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
 
-            Optional<ButtonType> result = alert.showAndWait();
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 event.getTableView().refresh();
             }
@@ -261,14 +264,17 @@ public class AllCaregiverController {
         }
 
     }
-
+    /**
+     * When a cell of the column with postalcode was changed, this method will be called, to persist the change.
+     *
+     * @param event Event including the changed object and the change.
+     */
     @FXML
     public void handleOnEditPostalcode(TableColumn.CellEditEvent<Caregiver, String> event) {
         if (event.getNewValue().isBlank()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
 
-            Optional<ButtonType> result = alert.showAndWait();
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 event.getTableView().refresh();
             }
@@ -279,14 +285,17 @@ public class AllCaregiverController {
         }
 
     }
-
+    /**
+     * When a cell of the column with city was changed, this method will be called, to persist the change.
+     *
+     * @param event Event including the changed object and the change.
+     */
     @FXML
     public void handleOnEditCity(TableColumn.CellEditEvent<Caregiver, String> event) {
         if (event.getNewValue().isBlank()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
 
-            Optional<ButtonType> result = alert.showAndWait();
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 event.getTableView().refresh();
             }
@@ -306,10 +315,9 @@ public class AllCaregiverController {
     @FXML
     public void handleOnEditTaxid(TableColumn.CellEditEvent<Caregiver, String> event) {
         if (event.getNewValue().isBlank()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
 
-            Optional<ButtonType> result = alert.showAndWait();
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 event.getTableView().refresh();
             }
@@ -329,10 +337,9 @@ public class AllCaregiverController {
     @FXML
     public void handleOnEditQualification(TableColumn.CellEditEvent<Caregiver, String> event) {
         if (event.getNewValue().isBlank()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("leere Felder können nicht gespeichert werden!");
 
-            Optional<ButtonType> result = alert.showAndWait();
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 event.getTableView().refresh();
             }
@@ -379,29 +386,33 @@ public class AllCaregiverController {
     @FXML
     public void handleDelete() {
 
-        Caregiver selectedItem = this.tableView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            try {
-                DaoFactory.getDaoFactory().createCaregiverDao().deleteById(selectedItem.getCid());
-                this.tableView.getItems().remove(selectedItem);
-            } catch (SQLException exception) {
-                exception.printStackTrace();
+        Optional<ButtonType> result = AlertBuilder.alertForDelete();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            Caregiver selectedItem = this.tableView.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                try {
+                    DaoFactory.getDaoFactory().createCaregiverDao().deleteById(selectedItem.getCid());
+                    this.tableView.getItems().remove(selectedItem);
+                } catch (SQLException exception) {
+                    exception.printStackTrace();
+                }
             }
         }
     }
-
+    /**
+     * This method handles events fired by the button to delete a caregiver. It opens an alert to reassure the infinitely deletion of the caregivers data.
+     * On confirmation (press 'OK')  {@link #handleDelete()} is called.
+     */
     @FXML
-    public void alertForDelete() {
+    public Optional<ButtonType> alertForDelete() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 
-        alert.setHeaderText("Pflegekraft endgültig löschen?");
+        alert.setHeaderText("Patient*in endgültig löschen?");
 
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            handleDelete();
-        }
-
+        return alert.showAndWait();
     }
+
 
     /**
      * This method handles the events fired by the button to add a caregiver. It collects the data from the
