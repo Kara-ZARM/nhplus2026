@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class UserDao extends DaoImp<User>{
@@ -18,10 +20,10 @@ public class UserDao extends DaoImp<User>{
     }
 
     /**
-     * Maps a <code>ResultSet</code> of one patient to an object of <code>Patient</code>.
+     * Maps a <code>ResultSet</code> of one user to an object of <code>User</code>.
      *
-     * @param result ResultSet with a single row. Columns will be mapped to an object of class <code>Patient</code>.
-     * @return Object of class <code>Patient</code> with the data from the resultSet.
+     * @param result ResultSet with a single row. Columns will be mapped to an object of class <code>User</code>.
+     * @return Object of class <code>User</code> with the data from the resultSet.
      */
     @Override
     protected User getInstanceFromResultSet(ResultSet result) throws SQLException {
@@ -31,15 +33,15 @@ public class UserDao extends DaoImp<User>{
                 result.getString("password_hash"),
                 result.getString("salt"),
                 User.Role.valueOf(result.getString("role")),
-                DateConverter.convertStringToLocalDate(result.getString("created_at")),
-                DateConverter.convertStringToLocalDate(result.getString("last_login")));
+                DateConverter.convertStringToLocalDateTime(result.getString("created_at")),
+                DateConverter.convertStringToLocalDateTime(result.getString("last_login")));
     }
 
     /**
-     * Maps a <code>ResultSet</code> of all patients to an <code>ArrayList</code> of <code>Patient</code> objects.
+     * Maps a <code>ResultSet</code> of all users to an <code>ArrayList</code> of <code>User</code> objects.
      *
-     * @param result ResultSet with all rows. The Columns will be mapped to objects of class <code>Patient</code>.
-     * @return <code>ArrayList</code> with objects of class <code>Patient</code> of all rows in the
+     * @param result ResultSet with all rows. The Columns will be mapped to objects of class <code>User</code>.
+     * @return <code>ArrayList</code> with objects of class <code>User</code> of all rows in the
      * <code>ResultSet</code>.
      */
     @Override
@@ -47,8 +49,8 @@ public class UserDao extends DaoImp<User>{
         ArrayList<User> list = new ArrayList<>();
         while (result.next()) {
             User.Role role = User.Role.valueOf(result.getString("role"));
-            LocalDate creationDate = DateConverter.convertStringToLocalDate(result.getString("created_at"));
-            LocalDate lastLogin = null;
+            LocalDateTime creationDate = DateConverter.convertStringToLocalDateTime(result.getString("created_at"));
+            LocalDateTime lastLogin = DateConverter.convertStringToLocalDateTime(result.getString("last_login"));
             User user = new User(
                     result.getInt("uid"),
                     result.getString("username"),
@@ -155,7 +157,8 @@ public class UserDao extends DaoImp<User>{
         return preparedStatement;
     }
 
-    protected PreparedStatement getLastLoginUpdateStatement(User user){
+    public void getLastLoginUpdateStatement(User user) throws SQLException {
+        user.setLastLogin(DateConverter.convertLocalDateTimeToString(LocalDateTime.now()));
         PreparedStatement preparedStatement = null;
         try{
             final String SQL =
@@ -168,6 +171,19 @@ public class UserDao extends DaoImp<User>{
         } catch (SQLException exception){
             exception.printStackTrace();
         }
-        return preparedStatement;
+        preparedStatement.executeUpdate();
+    }
+
+    public User findByUsername(String username) throws SQLException{
+        PreparedStatement preparedStatement = null;
+            final String SQL =
+                    "SELECT * FROM user WHERE username = ?";
+            preparedStatement = this.connection.prepareStatement(SQL);
+            preparedStatement.setString(1, username);
+            ResultSet result = preparedStatement.executeQuery();
+            if(result.next()){
+                return getInstanceFromResultSet(result);
+            }
+            return null;
     }
 }

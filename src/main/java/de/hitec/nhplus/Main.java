@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.Parent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,10 +24,10 @@ public class Main extends Application {
 
     public void mainWindow() {
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/de/hitec/nhplus/MainWindowView.fxml"));
-            BorderPane pane = loader.load();
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/de/hitec/nhplus/LoginView.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
 
-            Scene scene = new Scene(pane);
             this.primaryStage.setTitle("NHPlus");
             this.primaryStage.setScene(scene);
             this.primaryStage.setResizable(false);

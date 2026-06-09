@@ -13,10 +13,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.HBox;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
+
+import static de.hitec.nhplus.model.User.Role.ADMIN;
 
 /**
  * The <code>AllCaregiverController</code> contains the entire logic of the caregiver view. It determines which data is displayed and how to react to events.
@@ -88,6 +91,9 @@ public class AllCaregiverController {
     @FXML
     private TextField textFieldQualification;
 
+    @FXML
+    private HBox HboxInsert;
+
     private final ObservableList<Caregiver> caregiver = FXCollections.observableArrayList();
     private CaregiverDao dao;
 
@@ -95,6 +101,7 @@ public class AllCaregiverController {
      * When <code>initialize()</code> gets called, all fields are already initialized. For example from the FXMLLoader
      * after loading an FXML-File. At this point of the lifecycle of the Controller, the fields can be accessed and
      * configured.
+     * Depending on the <code>role</code> of the currently logged in <code>User</code>, some features will be enabled / disabled.
      */
 
     public void initialize() {
@@ -155,6 +162,11 @@ public class AllCaregiverController {
         this.textFieldCity.textProperty().addListener(inputNewCaregiverListener);
         this.textFieldTaxId.textProperty().addListener(inputNewCaregiverListener);
         this.textFieldQualification.textProperty().addListener(inputNewCaregiverListener);
+
+        if(LoginController.getCurrentUser().getRole() != ADMIN){
+            HboxInsert.setDisable(true);
+            HboxInsert.setVisible(false);
+        }
     }
 
     /**

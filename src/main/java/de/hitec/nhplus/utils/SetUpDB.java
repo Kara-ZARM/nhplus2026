@@ -113,7 +113,7 @@ public class SetUpDB {
     private static void setUpTableUser(Connection connection) {
         final String SQL = "CREATE TABLE IF NOT EXISTS user (" +
                 "   uid INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "   username TEXT NOT NULL, " +
+                "   username TEXT NOT NULL UNIQUE, " +
                 "   password_hash TEXT NOT NULL, " +
                 "   salt TEXT NOT NULL, " +
                 "   role TEXT NOT NULL, " +
@@ -170,14 +170,18 @@ public class SetUpDB {
         }
     }
 
+    /**
+     * Both users intentionally have the same plain text password to show that the hashed password, that is saved in the database, is different for both.
+     */
     private static void setUpUsers(){
         User.Role userRole = User.Role.USER;
         User.Role adminRole = User.Role.ADMIN;
-        LocalDate currentDate = LocalDate.now();
         try{
             UserDao dao = DaoFactory.getDaoFactory().createUserDao();
-            dao.create(new User("admin","placeholder",PasswordUtil.generateSalt(), adminRole,currentDate));
-            dao.create(new User("user", "placeholder",PasswordUtil.generateSalt(),userRole,currentDate));
+            String newSalt = PasswordUtil.generateSalt();
+            dao.create(new User("admin",PasswordUtil.hash("placeholder", newSalt),newSalt, adminRole));
+            newSalt = PasswordUtil.generateSalt();
+            dao.create(new User("user", PasswordUtil.hash("placeholder", newSalt),newSalt,userRole));
         } catch (SQLException exception){
             exception.printStackTrace();
         }

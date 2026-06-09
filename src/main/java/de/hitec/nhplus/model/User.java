@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
 * User Class to use for the Login process.
@@ -20,7 +21,7 @@ public class User {
         USER
     };
     private Role role;
-    private SimpleStringProperty created_at;
+    private final SimpleStringProperty CREATED_AT;
     private SimpleStringProperty last_login;
 
     /**
@@ -30,16 +31,15 @@ public class User {
      * @param username Username used for Login.
      * @param password_hash Hashed password of the user.
      * @param salt Randomized salt value.
-     * @param created_at Date the user was created.
      * @param role The role of the user to restrict access.
      */
-    public User(String username, String password_hash, String salt, Role role, LocalDate created_at){
+    public User(String username, String password_hash, String salt, Role role){
         this.uid = new SimpleLongProperty(0);
         this.username = new SimpleStringProperty(username);
         this.password_hash = new SimpleStringProperty(password_hash);
         this.salt = new SimpleStringProperty(salt);
         this.role = role;
-        this.created_at = new SimpleStringProperty(DateConverter.convertLocalDateToString(created_at));
+        this.CREATED_AT = new SimpleStringProperty(DateConverter.convertLocalDateTimeToString(LocalDateTime.now()));
     }
 
     /**
@@ -53,14 +53,14 @@ public class User {
      * @param created_at Date the user was created.
      * @param last_login The last login date of a user.
      */
-    public User(long uid, String username, String password_hash, String salt, Role role, LocalDate created_at, LocalDate last_login){
+    public User(long uid, String username, String password_hash, String salt, Role role, LocalDateTime created_at, LocalDateTime last_login){
         this.uid = new SimpleLongProperty(uid);
         this.username = new SimpleStringProperty(username);
         this.password_hash = new SimpleStringProperty(password_hash);
         this.salt = new SimpleStringProperty(salt);
         this.role = role;
-        this.created_at = new SimpleStringProperty(DateConverter.convertLocalDateToString(created_at));
-        this.last_login = new SimpleStringProperty(DateConverter.convertLocalDateToString(last_login));
+        this.CREATED_AT = new SimpleStringProperty(DateConverter.convertLocalDateTimeToString(created_at));
+        this.last_login = new SimpleStringProperty(DateConverter.convertLocalDateTimeToString(last_login));
     }
 
     public long getUid(){return uid.get();}
@@ -81,7 +81,7 @@ public class User {
 
     public void setRole(Role role){this.role = role;}
 
-    public String getCreatedAt(){return this.created_at.get();}
+    public String getCreatedAt(){return this.CREATED_AT.get();}
 
     public String getLastLogin(){return this.last_login.get();}
 
