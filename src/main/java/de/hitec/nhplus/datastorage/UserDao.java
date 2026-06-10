@@ -64,6 +64,12 @@ public class UserDao extends DaoImp<User>{
         return list;
     }
 
+    /**
+     * Generates a <code>PreparedStatement</code> to persist the given object of <code>User</code>.
+     *
+     * @param user Object of <code>User</code> to persist.
+     * @return <code>PreparedStatement</code> to insert the given user.
+     */
     @Override
     protected PreparedStatement getCreateStatement(User user) {
         PreparedStatement preparedStatement = null;
@@ -82,6 +88,12 @@ public class UserDao extends DaoImp<User>{
         return preparedStatement;
     }
 
+    /**
+     * Generates a <code>PreparedStatement</code> to query a user by a given user id (uid).
+     *
+     * @param uid User id to query.
+     * @return <code>PreparedStatement</code> to query the user.
+     */
     @Override
     protected PreparedStatement getReadByIDStatement(long uid){
         PreparedStatement preparedStatement = null;
@@ -95,6 +107,11 @@ public class UserDao extends DaoImp<User>{
         return preparedStatement;
     }
 
+    /**
+     * Generates a <code>PreparedStatement</code> to query all users.
+     *
+     * @return <code>PreparedStatement</code> to query all users.
+     */
     @Override
     protected PreparedStatement getReadAllStatement(){
         PreparedStatement statement = null;
@@ -107,6 +124,13 @@ public class UserDao extends DaoImp<User>{
         return statement;
     }
 
+    /**
+     * Generates a <code>PreparedStatement</code> to update the given user's <code>username</code> and <code>role</code>, identified
+     * by the id of the user (uid).
+     *
+     * @param user User object to update.
+     * @return <code>PreparedStatement</code> to update the given user.
+     */
     @Override
     protected PreparedStatement getUpdateStatement(User user){
         PreparedStatement preparedStatement = null;
@@ -126,6 +150,12 @@ public class UserDao extends DaoImp<User>{
         return preparedStatement;
     }
 
+    /**
+     * Generates a <code>PreparedStatement</code> to delete a user with the given id.
+     *
+     * @param uid Id of the user to delete.
+     * @return <code>PreparedStatement</code> to delete user with the given id.
+     */
     @Override
     protected PreparedStatement getDeleteStatement(long uid){
         PreparedStatement preparedStatement = null;
@@ -139,6 +169,13 @@ public class UserDao extends DaoImp<User>{
         return preparedStatement;
     }
 
+    /**
+     * Generates a <code>PreparedStatement</code> to update the given user's <code>password_hash</code> and <code>salt</code>, identified
+     * by the id of the user (uid).
+     *
+     * @param user User object to update.
+     * @return <code>PreparedStatement</code> to update the given user.
+     */
     protected PreparedStatement getPasswordUpdateStatement(User user){
         PreparedStatement preparedStatement = null;
         try{
@@ -157,6 +194,13 @@ public class UserDao extends DaoImp<User>{
         return preparedStatement;
     }
 
+    /**
+     * Generates a <code>PreparedStatement</code> to update the given user's <code>last_login</code>, identified
+     * by the id of the user (uid).
+     *
+     * @param user User object to update.
+     * @return <code>PreparedStatement</code> to update the given user.
+     */
     public void getLastLoginUpdateStatement(User user) throws SQLException {
         user.setLastLogin(DateConverter.convertLocalDateTimeToString(LocalDateTime.now()));
         PreparedStatement preparedStatement = null;
@@ -174,6 +218,12 @@ public class UserDao extends DaoImp<User>{
         preparedStatement.executeUpdate();
     }
 
+    /**
+     * Searches for a specific <code>User</code> in the database by the given <code>username</code> and returns the <code>User</code> if found, or null if the given <code>username</code> does not match any <code>User</code>.
+     * @param username the username of the User that is being searched for in the database.
+     * @return <code>User</code>
+     * @throws SQLException
+     */
     public User findByUsername(String username) throws SQLException{
         PreparedStatement preparedStatement = null;
             final String SQL =
