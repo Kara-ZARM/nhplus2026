@@ -8,14 +8,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
-* User Class to use for the Login process.
-*/
+ * User Class to use for the Login process.
+ * Old SHA-256 code commented out for documentation reasons.
+ */
 
 public class User {
     private SimpleLongProperty uid;
     private SimpleStringProperty username;
     private SimpleStringProperty password_hash;
-    private SimpleStringProperty salt;
+    //private SimpleStringProperty salt;
     public enum Role{
         ADMIN,
         USER
@@ -30,14 +31,14 @@ public class User {
      *
      * @param username Username used for Login.
      * @param password_hash Hashed password of the user.
-     * @param salt Randomized salt value.
+     * //@param salt Randomized salt value.
      * @param role The role of the user to restrict access.
      */
-    public User(String username, String password_hash, String salt, Role role){
+    public User(String username, String password_hash, Role role){
         this.uid = new SimpleLongProperty(0);
         this.username = new SimpleStringProperty(username);
         this.password_hash = new SimpleStringProperty(password_hash);
-        this.salt = new SimpleStringProperty(salt);
+        //this.salt = new SimpleStringProperty(salt);
         this.role = role;
         this.CREATED_AT = new SimpleStringProperty(DateConverter.convertLocalDateTimeToString(LocalDateTime.now()));
     }
@@ -48,16 +49,16 @@ public class User {
      *
      * @param username Username used for Login.
      * @param password_hash Hashed password of the user.
-     * @param salt Randomized salt value.
+     * //@param salt Randomized salt value.
      * @param role The role of the user to restrict access.
      * @param created_at Date the user was created.
      * @param last_login The last login date of a user.
      */
-    public User(long uid, String username, String password_hash, String salt, Role role, LocalDateTime created_at, LocalDateTime last_login){
+    public User(long uid, String username, String password_hash, Role role, LocalDateTime created_at, LocalDateTime last_login){
         this.uid = new SimpleLongProperty(uid);
         this.username = new SimpleStringProperty(username);
         this.password_hash = new SimpleStringProperty(password_hash);
-        this.salt = new SimpleStringProperty(salt);
+        //this.salt = new SimpleStringProperty(salt);
         this.role = role;
         this.CREATED_AT = new SimpleStringProperty(DateConverter.convertLocalDateTimeToString(created_at));
         this.last_login = new SimpleStringProperty(DateConverter.convertLocalDateTimeToString(last_login));
@@ -73,9 +74,9 @@ public class User {
 
     public void setPasswordHash(String passwordHash){this.password_hash.set(passwordHash);}
 
-    public String getSalt(){return this.salt.get();}
+    //public String getSalt(){return this.salt.get();}
 
-    public void setSalt(String salt){this.salt.set(salt);}
+    //public void setSalt(String salt){this.salt.set(salt);}
 
     public Role getRole(){return this.role;}
 

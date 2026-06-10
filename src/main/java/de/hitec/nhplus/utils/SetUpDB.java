@@ -6,6 +6,7 @@ import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.model.Treatment;
 import de.hitec.nhplus.model.User;
 import de.hitec.nhplus.utils.PasswordUtil;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -115,7 +116,7 @@ public class SetUpDB {
                 "   uid INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "   username TEXT NOT NULL UNIQUE, " +
                 "   password_hash TEXT NOT NULL, " +
-                "   salt TEXT NOT NULL, " +
+                //"   salt TEXT NOT NULL, " +
                 "   role TEXT NOT NULL, " +
                 "   created_at TEXT NOT NULL, " +
                 "   last_login TEXT " +
@@ -170,18 +171,22 @@ public class SetUpDB {
         }
     }
 
-    /**
+    /*
      * Both users intentionally have the same plain text password to show that the hashed password, that is saved in the database, is different for both.
+     * Old SHA-256 Code commented out for documentation reasons.
      */
     private static void setUpUsers(){
         User.Role userRole = User.Role.USER;
         User.Role adminRole = User.Role.ADMIN;
         try{
             UserDao dao = DaoFactory.getDaoFactory().createUserDao();
-            String newSalt = PasswordUtil.generateSalt();
-            dao.create(new User("admin",PasswordUtil.hash("placeholder", newSalt),newSalt, adminRole));
-            newSalt = PasswordUtil.generateSalt();
-            dao.create(new User("user", PasswordUtil.hash("placeholder", newSalt),newSalt,userRole));
+            //String newSalt = PasswordUtil.generateSalt();
+            //dao.create(new User("admin",PasswordUtil.hash("placeholder", newSalt),newSalt, adminRole));
+            //newSalt = PasswordUtil.generateSalt();
+            //dao.create(new User("user", PasswordUtil.hash("placeholder", newSalt),newSalt,userRole));
+            dao.create(new User("admin",BCrypt.hashpw("placeholder", BCrypt.gensalt()), adminRole));
+            dao.create(new User("user", BCrypt.hashpw("placeholder", BCrypt.gensalt()),userRole));
+            dao.create(new User("BCrypt", BCrypt.hashpw("placeholder", BCrypt.gensalt()),adminRole));
         } catch (SQLException exception){
             exception.printStackTrace();
         }
