@@ -31,7 +31,7 @@ public class UserDao extends DaoImp<User>{
                 result.getInt("uid"),
                 result.getString("username"),
                 result.getString("password_hash"),
-                result.getString("salt"),
+                //result.getString("salt"),
                 User.Role.valueOf(result.getString("role")),
                 DateConverter.convertStringToLocalDateTime(result.getString("created_at")),
                 DateConverter.convertStringToLocalDateTime(result.getString("last_login")));
@@ -55,7 +55,7 @@ public class UserDao extends DaoImp<User>{
                     result.getInt("uid"),
                     result.getString("username"),
                     result.getString("password_hash"),
-                    result.getString("salt"),
+                    //result.getString("salt"),
                     role,
                     creationDate,
                     lastLogin);
@@ -74,14 +74,14 @@ public class UserDao extends DaoImp<User>{
     protected PreparedStatement getCreateStatement(User user) {
         PreparedStatement preparedStatement = null;
         try {
-            final String SQL = "INSERT INTO user (username, password_hash, salt, role, created_at) " +
-                    "VALUES (?, ?, ?, ?, ?)";
+            final String SQL = "INSERT INTO user (username, password_hash, role, created_at) " +
+                    "VALUES (?, ?, ?, ?)";
             preparedStatement = this.connection.prepareStatement(SQL);
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPasswordHash());
-            preparedStatement.setString(3, user.getSalt());
-            preparedStatement.setString(4, user.getRole().name());
-            preparedStatement.setString(5, user.getCreatedAt());
+            //preparedStatement.setString(3, user.getSalt());
+            preparedStatement.setString(3, user.getRole().name());
+            preparedStatement.setString(4, user.getCreatedAt());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -181,13 +181,13 @@ public class UserDao extends DaoImp<User>{
         try{
             final String SQL =
                     "UPDATE user SET " +
-                            "password_hash = ?, " +
-                            "salt = ? " +
+                            "password_hash = ? " +
+                            //"salt = ? " +
                             "WHERE uid = ?";
             preparedStatement = this.connection.prepareStatement(SQL);
             preparedStatement.setString(1, user.getPasswordHash());
-            preparedStatement.setString(2, PasswordUtil.generateSalt());
-            preparedStatement.setLong(3, user.getUid());
+            //preparedStatement.setString(2, PasswordUtil.generateSalt());
+            preparedStatement.setLong(2, user.getUid());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

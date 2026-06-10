@@ -14,11 +14,13 @@ import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 
 /**
  * The <code>LoginController</code> contains the logic that handles the login and logout process.
+ * Old SHA-256 Code commented out for documentation reasons.
  */
 
 public class LoginController {
@@ -59,7 +61,7 @@ public class LoginController {
         String username = this.textFieldUsername.getText();
         String password = this.passwordField.getText();
         String password_hash = null;
-        String salt = null;
+        //String salt = null;
         try {
             User user = dao.findByUsername(username);
             if(user==null){
@@ -67,8 +69,10 @@ public class LoginController {
                 return;
             }
             password_hash = user.getPasswordHash();
-            salt = user.getSalt();
-            if(PasswordUtil.verify(password, salt, password_hash)){
+            //salt = user.getSalt();
+
+            //if(PasswordUtil.verify(password, salt, password_hash)){
+            if(BCrypt.checkpw(password, password_hash)){
                 currentUser = user;
                 dao.getLastLoginUpdateStatement(user);
                 FXMLLoader loader = new FXMLLoader(
