@@ -82,6 +82,8 @@ public class User {
 
     public void setRole(Role role){this.role = role;}
 
+    public String getRoleName(){return this.role.name();}
+
     public String getCreatedAt(){return this.CREATED_AT.get();}
 
     public String getLastLogin(){return this.last_login.get();}
