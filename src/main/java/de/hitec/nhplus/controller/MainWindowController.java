@@ -12,6 +12,8 @@ import javafx.scene.control.Button;
 
 import java.io.IOException;
 
+import static de.hitec.nhplus.model.User.Role.ADMIN;
+
 public class MainWindowController {
 
     @FXML
@@ -19,6 +21,17 @@ public class MainWindowController {
 
     @FXML
     private Button buttonLogout;
+
+    @FXML
+    private Button buttonUsers;
+
+    @FXML
+    public void initialize(){
+        if(LoginController.getCurrentUser().getRole() != ADMIN){
+            buttonUsers.setDisable(true);
+            buttonUsers.setVisible(false);
+        }
+    }
 
     @FXML
     private void handleShowAllPatient(ActionEvent event) {
@@ -66,5 +79,15 @@ public class MainWindowController {
 
         Stage stage = (Stage) buttonLogout.getScene().getWindow();
         stage.setScene(mainScene);
+    }
+
+    @FXML
+    private void handleShowAllUsers(ActionEvent event){
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("/de/hitec/nhplus/AllUserView.fxml"));
+        try{
+            mainBorderPane.setCenter(loader.load());
+        } catch (IOException exception){
+            exception.printStackTrace();
+        }
     }
 }
