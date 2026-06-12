@@ -7,12 +7,17 @@ import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class AllUserController {
@@ -67,5 +72,20 @@ public class AllUserController {
         } catch (SQLException exception){
             exception.printStackTrace();
         }
+    }
+
+    @FXML
+    public void handleEdit() throws IOException {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/de/hitec/nhplus/EditUserView.fxml")
+        );
+
+        Parent root = loader.load();
+
+        Stage stage = new Stage();
+        stage.setTitle("User Management");
+        stage.setScene(new Scene(root));
+
+        stage.show();
     }
 }
