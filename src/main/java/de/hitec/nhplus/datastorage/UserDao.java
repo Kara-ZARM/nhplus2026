@@ -176,7 +176,7 @@ public class UserDao extends DaoImp<User>{
      * @param user User object to update.
      * @return <code>PreparedStatement</code> to update the given user.
      */
-    protected PreparedStatement getPasswordUpdateStatement(User user){
+    public PreparedStatement getPasswordUpdateStatement(User user){
         PreparedStatement preparedStatement = null;
         try{
             final String SQL =

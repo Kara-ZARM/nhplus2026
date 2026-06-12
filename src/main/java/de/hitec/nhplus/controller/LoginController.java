@@ -3,6 +3,7 @@ package de.hitec.nhplus.controller;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.UserDao;
 import de.hitec.nhplus.model.User;
+import de.hitec.nhplus.utils.MessageUtil;
 import de.hitec.nhplus.utils.PasswordUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -65,7 +66,7 @@ public class LoginController {
         try {
             User user = dao.findByUsername(username);
             if(user==null){
-                showError("Wrong username.");
+                MessageUtil.showError(labelError,"Wrong username.");
                 return;
             }
             password_hash = user.getPasswordHash();
@@ -85,22 +86,13 @@ public class LoginController {
                 Stage stage = (Stage) buttonLogin.getScene().getWindow();
                 stage.setScene(mainScene);
             } else {
-                showError("Wrong password.");
+                MessageUtil.showError(labelError,"Wrong password.");
             }
         } catch (SQLException exception){
             exception.printStackTrace();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-    }
-
-    /**
-     * <code>showError</code> displays an error at the position of <code>labelError</code>.
-     * @param message is the message that is being displayed.
-     */
-    public void showError(String message){
-        labelError.setVisible(true);
-        labelError.setText(message);
     }
 
     /**
