@@ -43,9 +43,6 @@ public class AllUserController {
     @FXML
     private Button buttonEdit;
 
-    @FXML
-    private Button buttonDelete;
-
     private final ObservableList<User> users = FXCollections.observableArrayList();
     private UserDao dao;
 
@@ -82,10 +79,17 @@ public class AllUserController {
 
         Parent root = loader.load();
 
+        EditUserController editController = loader.getController();
+        editController.setParentController(this);
+
         Stage stage = new Stage();
         stage.setTitle("User Management");
         stage.setScene(new Scene(root));
 
         stage.show();
+    }
+
+    public void refreshUserTableView(){
+        this.readAllAndShowInTableView();
     }
 }

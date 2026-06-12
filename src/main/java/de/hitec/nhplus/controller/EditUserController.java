@@ -3,16 +3,16 @@ package de.hitec.nhplus.controller;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.UserDao;
 import de.hitec.nhplus.model.User;
+import de.hitec.nhplus.utils.AlertBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Optional;
 
 public class EditUserController {
 
@@ -37,7 +37,11 @@ public class EditUserController {
     @FXML
     private Button buttonUpdate;
 
+    @FXML
+    private Label labelError;
+
     private UserDao dao;
+    private AllUserController parentController;
     private final ObservableList<String> userSelection = FXCollections.observableArrayList();
     private final ObservableList<String> roleSelection = FXCollections.observableArrayList();
     private ArrayList<User> userList;
@@ -51,6 +55,10 @@ public class EditUserController {
         this.createRoleComboBoxData();
         this.buttonDelete.setDisable(true);
         this.buttonUpdate.setText("Create User");
+    }
+
+    public void setParentController(AllUserController parentController) {
+        this.parentController = parentController;
     }
 
     private void createUserComboBoxData(){
@@ -104,7 +112,48 @@ public class EditUserController {
     }
 
     @FXML
-    private void handleUserDelete(){
+    private void handleUserDelete() throws SQLException {
+        UserDao dao = DaoFactory.getDaoFactory().createUserDao();
+        User selectedUser = dao.findByUsername(this.comboBoxUserSelect.getSelectionModel().getSelectedItem());
 
+        if(selectedUser.getUid()==LoginController.getCurrentUser().getUid()){
+            labelError.setText("Der eingeloggte Nutzer kann nicht gelöscht werden!");
+            labelError.setVisible(true);
+        } else {
+            Optional<ButtonType> result = AlertBuilder.alertForDelete();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                if (selectedUser != null) {
+                    try {
+                        DaoFactory.getDaoFactory().createUserDao().deleteById(selectedUser.getUid());
+                        updateAllUserViews();
+                    } catch (SQLException exception) {
+                        exception.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    @FXML
+    private void handleUserUpdate() throws SQLException {
+        UserDao dao = DaoFactory.getDaoFactory().createUserDao();
+        User selectedUser = dao.findByUsername(this.comboBoxUserSelect.getSelectionModel().getSelectedItem());
+        if(Objects.equals(textFieldUsername.getText(), "")){
+            labelError.setVisible(true);
+            labelError.setText("Benutzername darf nicht leer sein!");
+        } else {
+            if(!Objects.equals(textFieldUsername.getText(), selectedUser.getUsername())){
+                selectedUser.setUsername(textFieldUsername.getText());
+                DaoFactory.getDaoFactory().createUserDao().update(selectedUser);
+                updateAllUserViews();
+            }
+        }
+    }
+
+    private void updateAllUserViews(){
+        this.createUserComboBoxData();
+        if (parentController != null) {
+            parentController.refreshUserTableView();
+        }
     }
 }
