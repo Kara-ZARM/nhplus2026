@@ -4,10 +4,12 @@ import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.UserDao;
 import de.hitec.nhplus.model.User;
 import de.hitec.nhplus.utils.AlertBuilder;
+import de.hitec.nhplus.utils.MessageUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -117,8 +119,7 @@ public class EditUserController {
         User selectedUser = dao.findByUsername(this.comboBoxUserSelect.getSelectionModel().getSelectedItem());
 
         if(selectedUser.getUid()==LoginController.getCurrentUser().getUid()){
-            labelError.setText("Der eingeloggte Nutzer kann nicht gelöscht werden!");
-            labelError.setVisible(true);
+            MessageUtil.showError(labelError,"Der eingeloggte Nutzer kann nicht gelöscht werden!");
         } else {
             Optional<ButtonType> result = AlertBuilder.alertForDelete();
             if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -139,13 +140,22 @@ public class EditUserController {
         UserDao dao = DaoFactory.getDaoFactory().createUserDao();
         User selectedUser = dao.findByUsername(this.comboBoxUserSelect.getSelectionModel().getSelectedItem());
         if(Objects.equals(textFieldUsername.getText(), "")){
-            labelError.setVisible(true);
-            labelError.setText("Benutzername darf nicht leer sein!");
+            MessageUtil.showError(labelError,"Benutzername darf nicht leer sein!");
         } else {
-            if(!Objects.equals(textFieldUsername.getText(), selectedUser.getUsername())){
+            if(!Objects.equals(textFieldUsername.getText(), selectedUser.getUsername()) || !Objects.equals(comboBoxRoleSelect.getSelectionModel().getSelectedItem(), selectedUser.getRoleName())){
                 selectedUser.setUsername(textFieldUsername.getText());
+                //IMP: insert failsafe so that current user cannot change from admin role!!!
+                selectedUser.setRole(User.Role.valueOf(comboBoxRoleSelect.getSelectionModel().getSelectedItem()));
                 DaoFactory.getDaoFactory().createUserDao().update(selectedUser);
                 updateAllUserViews();
+            }
+            if((passwordFieldEntry.getText()!=""&&passwordFieldConfirm.getText()=="") || (passwordFieldConfirm.getText()!=""&&passwordFieldEntry.getText()=="")){
+                MessageUtil.showError(labelError,"Beide Passwortfelder müssen ausgefüllt sein!");
+            } else if (!Objects.equals(passwordFieldEntry.getText(), passwordFieldConfirm.getText())) {
+                MessageUtil.showError(labelError,"Passwörter stimmen nicht überein!");
+            } else {
+                selectedUser.setPasswordHash(BCrypt.hashpw(passwordFieldEntry.getText(),BCrypt.gensalt()));
+                DaoFactory.getDaoFactory().createUserDao().getPasswordUpdateStatement(selectedUser);
             }
         }
     }
