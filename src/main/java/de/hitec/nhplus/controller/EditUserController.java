@@ -139,24 +139,47 @@ public class EditUserController {
     private void handleUserUpdate() throws SQLException {
         UserDao dao = DaoFactory.getDaoFactory().createUserDao();
         User selectedUser = dao.findByUsername(this.comboBoxUserSelect.getSelectionModel().getSelectedItem());
+        //Case: Create new user
+        if(Objects.equals(selectedUser.getUsername(), "Create new user")){
+            if (checkIfUsernameEmpty()) {
+                return;
+            } else {
+                String username = textFieldUsername.getText();
+            }
+        }
+        //Case: Update user
+        else {
+            if (checkIfUsernameEmpty()) {
+                return;
+                //MessageUtil.showError(labelError,"Benutzername darf nicht leer sein!");
+            } else {
+                if (!Objects.equals(textFieldUsername.getText(), selectedUser.getUsername()) || !Objects.equals(comboBoxRoleSelect.getSelectionModel().getSelectedItem(), selectedUser.getRoleName())) {
+                    selectedUser.setUsername(textFieldUsername.getText());
+                    //IMP: insert failsafe so that current user cannot change from admin role!!!
+                    selectedUser.setRole(User.Role.valueOf(comboBoxRoleSelect.getSelectionModel().getSelectedItem()));
+                    DaoFactory.getDaoFactory().createUserDao().update(selectedUser);
+                    updateAllUserViews();
+                }
+                //Case: empty field should not update!
+                if ((passwordFieldEntry.getText() != "" && passwordFieldConfirm.getText() == "") || (passwordFieldConfirm.getText() != "" && passwordFieldEntry.getText() == "")) {
+                    MessageUtil.showError(labelError, "Beide Passwortfelder müssen ausgefüllt sein!");
+                } else if (!Objects.equals(passwordFieldEntry.getText(), passwordFieldConfirm.getText())) {
+                    MessageUtil.showError(labelError, "Passwörter stimmen nicht überein!");
+                } else {
+                    selectedUser.setPasswordHash(BCrypt.hashpw(passwordFieldEntry.getText(), BCrypt.gensalt()));
+                    DaoFactory.getDaoFactory().createUserDao().getPasswordUpdateStatement(selectedUser);
+                    //password character limit
+                }
+            }
+        }
+    }
+
+    private boolean checkIfUsernameEmpty(){
         if(Objects.equals(textFieldUsername.getText(), "")){
             MessageUtil.showError(labelError,"Benutzername darf nicht leer sein!");
+            return true;
         } else {
-            if(!Objects.equals(textFieldUsername.getText(), selectedUser.getUsername()) || !Objects.equals(comboBoxRoleSelect.getSelectionModel().getSelectedItem(), selectedUser.getRoleName())){
-                selectedUser.setUsername(textFieldUsername.getText());
-                //IMP: insert failsafe so that current user cannot change from admin role!!!
-                selectedUser.setRole(User.Role.valueOf(comboBoxRoleSelect.getSelectionModel().getSelectedItem()));
-                DaoFactory.getDaoFactory().createUserDao().update(selectedUser);
-                updateAllUserViews();
-            }
-            if((passwordFieldEntry.getText()!=""&&passwordFieldConfirm.getText()=="") || (passwordFieldConfirm.getText()!=""&&passwordFieldEntry.getText()=="")){
-                MessageUtil.showError(labelError,"Beide Passwortfelder müssen ausgefüllt sein!");
-            } else if (!Objects.equals(passwordFieldEntry.getText(), passwordFieldConfirm.getText())) {
-                MessageUtil.showError(labelError,"Passwörter stimmen nicht überein!");
-            } else {
-                selectedUser.setPasswordHash(BCrypt.hashpw(passwordFieldEntry.getText(),BCrypt.gensalt()));
-                DaoFactory.getDaoFactory().createUserDao().getPasswordUpdateStatement(selectedUser);
-            }
+            return false;
         }
     }
 

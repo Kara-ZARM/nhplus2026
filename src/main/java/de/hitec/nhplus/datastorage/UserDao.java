@@ -176,7 +176,7 @@ public class UserDao extends DaoImp<User>{
      * @param user User object to update.
      * @return <code>PreparedStatement</code> to update the given user.
      */
-    public PreparedStatement getPasswordUpdateStatement(User user){
+    public void getPasswordUpdateStatement(User user) throws SQLException {
         PreparedStatement preparedStatement = null;
         try{
             final String SQL =
@@ -191,7 +191,7 @@ public class UserDao extends DaoImp<User>{
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
-        return preparedStatement;
+        preparedStatement.executeUpdate();
     }
 
     /**
