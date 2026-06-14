@@ -1,7 +1,6 @@
 package de.hitec.nhplus.datastorage;
 
 import de.hitec.nhplus.model.Caregiver;
-import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.utils.DateConverter;
 
 import java.sql.Connection;

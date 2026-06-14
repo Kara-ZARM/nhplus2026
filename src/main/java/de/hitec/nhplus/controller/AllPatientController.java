@@ -2,6 +2,9 @@ package de.hitec.nhplus.controller;
 
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.PatientDao;
+import de.hitec.nhplus.logging.DBLogger;
+import de.hitec.nhplus.logging.LogEntry;
+import de.hitec.nhplus.logging.OperationType;
 import de.hitec.nhplus.utils.AlertBuilder;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -181,6 +184,11 @@ public class AllPatientController {
     private void doUpdate(TableColumn.CellEditEvent<Patient, String> event) {
         try {
             this.dao.update(event.getRowValue());
+            DBLogger.log(new LogEntry(
+                    OperationType.UPDATE,
+                    "patient",
+                    "" + event.getRowValue().getPid(),
+                    LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -215,6 +223,11 @@ public class AllPatientController {
             if (selectedItem != null) {
                 try {
                     DaoFactory.getDaoFactory().createPatientDao().deleteById(selectedItem.getPid());
+                    DBLogger.log(new LogEntry(
+                            OperationType.DELETE,
+                            "patient",
+                            "" + selectedItem.getPid(),
+                            LoginController.getCurrentUser().getUsername()));
                     this.tableView.getItems().remove(selectedItem);
                 } catch (SQLException exception) {
                     exception.printStackTrace();
@@ -237,8 +250,16 @@ public class AllPatientController {
         String careLevel = this.textFieldCareLevel.getText();
         String roomNumber = this.textFieldRoomNumber.getText();
         String assets = this.textFieldAssets.getText();
+
+        Patient patient = new Patient(firstName, surname, date, careLevel, roomNumber, assets);
+
         try {
-            this.dao.create(new Patient(firstName, surname, date, careLevel, roomNumber, assets));
+            this.dao.create(patient);
+            DBLogger.log(new LogEntry(
+                    OperationType.CREATE,
+                    "patient",
+                    patient.getSurname() + patient.getFirstName(),
+                    LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

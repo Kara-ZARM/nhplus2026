@@ -6,10 +6,10 @@ public class LogEntry {
     private LocalDateTime timestamp;
     private OperationType operationType;
     private String tableName;
-    private Long recordId;
+    private String recordId;
     private String userId;
 
-    public LogEntry(OperationType operationType, String tableName, long recordId, String userId) {
+    public LogEntry(OperationType operationType, String tableName, String recordId, String userId) {
         this.timestamp =  LocalDateTime.now();
         this.operationType = operationType;
         this.tableName = tableName;
@@ -29,7 +29,7 @@ public class LogEntry {
         return tableName;
     }
 
-    public Long getRecordId() {
+    public String getRecordId() {
         return recordId;
     }
 

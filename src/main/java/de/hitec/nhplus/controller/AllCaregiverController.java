@@ -237,7 +237,7 @@ public class AllCaregiverController {
             DBLogger.log(new LogEntry(
                     OperationType.UPDATE,
                     "caregiver",
-                    0,
+                    "" + event.getRowValue().getCid(),
                     LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();
@@ -277,7 +277,7 @@ public class AllCaregiverController {
                     DBLogger.log(new LogEntry(
                             OperationType.DELETE,
                             "caregiver",
-                            selectedItem.getCid(),
+                            "" + selectedItem.getCid(),
                             LoginController.getCurrentUser().getUsername()));
                 } catch (SQLException exception) {
                     exception.printStackTrace();
@@ -303,12 +303,15 @@ public class AllCaregiverController {
         String city = this.textFieldCity.getText();
         String taxclass = this.textFieldTaxId.getText();
         String qualification = this.textFieldQualification.getText();
+
+        Caregiver caregiver = new Caregiver(firstName, surname, date, street, postalCode, city, taxclass, phone, qualification);
+
         try {
-            this.dao.create(new Caregiver(firstName, surname, date, street, postalCode, city, taxclass, phone, qualification));
+            this.dao.create(caregiver);
             DBLogger.log(new LogEntry(
                     OperationType.CREATE,
                     "caregiver",
-                    0,
+                    caregiver.getSurname() + caregiver.getFirstName(),
                     LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();
