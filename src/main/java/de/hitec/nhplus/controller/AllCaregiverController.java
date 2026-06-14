@@ -3,6 +3,7 @@ package de.hitec.nhplus.controller;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.CaregiverDao;
 import de.hitec.nhplus.model.Caregiver;
+import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.utils.AlertBuilder;
 import de.hitec.nhplus.utils.DateConverter;
 import javafx.beans.value.ChangeListener;
@@ -167,6 +168,52 @@ public class AllCaregiverController {
             HboxInsert.setDisable(true);
             HboxInsert.setVisible(false);
         }
+    }
+
+    /**
+     * When a cell of a column was changed, this method will be called, to persist the change.
+     * The method first validates whether the new input is valid (not blank). If the input is invalid,
+     * a warning dialog is displayed and the change is reverted in the UI. If the input is valid,
+     * the corresponding patient attribute is updated via a switch statement and the change is
+     * persisted to the database.
+     *
+     * @param event Event including the changed object and the change.
+     */
+
+    public void handleOnEdit(TableColumn.CellEditEvent<Caregiver, String> event) {
+        String newValue = event.getNewValue();
+
+        if (newValue == null || newValue.isBlank()) {
+
+            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                event.getTableView().refresh();
+            }
+            return;
+        }
+
+        Caregiver caregiver = event.getRowValue();
+        String columnId = event.getTableColumn().getId();
+
+        if (columnId == null) {
+            return;
+        }
+        switch (columnId) {
+            case "columnSurname" -> caregiver.setSurname(newValue);
+            case "columnFirstName" -> caregiver.setFirstName(newValue);
+            case "columnDateOfBirth" -> caregiver.setDateOfBirth(newValue);
+            case "columnPhoneNumber" -> caregiver.setPhoneNumber(newValue);
+            case "columnStreet" -> caregiver.setStreet(newValue);
+            case "columnPostalCode" -> caregiver.setPostalcode(newValue);
+            case "columnCity" -> caregiver.setCity(newValue);
+            case "columnTaxId" -> caregiver.setTaxid(newValue);
+            case "columnQualification" -> caregiver.setQualification(newValue);
+            default -> {
+                return;
+            }
+        }
+        this.doUpdate(event);
     }
 
     /**
@@ -412,19 +459,6 @@ public class AllCaregiverController {
             }
         }
     }
-    /**
-     * This method handles events fired by the button to delete a caregiver. It opens an alert to reassure the infinitely deletion of the caregivers data.
-     * On confirmation (press 'OK')  {@link #handleDelete()} is called.
-     */
-    @FXML
-    public Optional<ButtonType> alertForDelete() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-
-        alert.setHeaderText("Patient*in endgültig löschen?");
-
-        return alert.showAndWait();
-    }
-
 
     /**
      * This method handles the events fired by the button to add a caregiver. It collects the data from the
