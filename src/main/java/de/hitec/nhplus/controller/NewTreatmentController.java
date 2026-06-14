@@ -86,8 +86,9 @@ public class NewTreatmentController {
         String remarks = textAreaRemarks.getText();
         Treatment treatment = new Treatment(patient.getPid(), date, begin, end, description, remarks);
         createTreatment(treatment);
-        controller.readAllAndShowInTableView();
+        //controller.readAllAndShowInTableView();
         stage.close();
+        controller.handleComboBox();
     }
 
     private void createTreatment(Treatment treatment) {
