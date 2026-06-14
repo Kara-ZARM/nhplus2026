@@ -2,6 +2,8 @@ package de.hitec.nhplus.controller;
 
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.CaregiverDao;
+import de.hitec.nhplus.logging.LogEntry;
+import de.hitec.nhplus.logging.OperationType;
 import de.hitec.nhplus.model.Caregiver;
 import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.utils.AlertBuilder;
@@ -232,7 +234,11 @@ public class AllCaregiverController {
     private void doUpdate(TableColumn.CellEditEvent<Caregiver, String> event) {
         try {
             this.dao.update(event.getRowValue());
-            DBLogger.log("");
+            DBLogger.log(new LogEntry(
+                    OperationType.UPDATE,
+                    "caregiver",
+                    0,
+                    LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -268,7 +274,11 @@ public class AllCaregiverController {
                 try {
                     DaoFactory.getDaoFactory().createCaregiverDao().deleteById(selectedItem.getCid());
                     this.tableView.getItems().remove(selectedItem);
-                    DBLogger.log(" - in CAREGIVER done by " + LoginController.getCurrentUser().getUsername() + " affected id " + selectedItem.getCid());
+                    DBLogger.log(new LogEntry(
+                            OperationType.DELETE,
+                            "caregiver",
+                            selectedItem.getCid(),
+                            LoginController.getCurrentUser().getUsername()));
                 } catch (SQLException exception) {
                     exception.printStackTrace();
                 }
@@ -295,7 +305,11 @@ public class AllCaregiverController {
         String qualification = this.textFieldQualification.getText();
         try {
             this.dao.create(new Caregiver(firstName, surname, date, street, postalCode, city, taxclass, phone, qualification));
-            DBLogger.log(" in CAREGIVER done by " + LoginController.getCurrentUser().getUsername());
+            DBLogger.log(new LogEntry(
+                    OperationType.CREATE,
+                    "caregiver",
+                    0,
+                    LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
