@@ -34,15 +34,16 @@ public class TreatmentDao extends DaoImp<Treatment> {
     protected PreparedStatement getCreateStatement(Treatment treatment) {
         PreparedStatement preparedStatement = null;
         try {
-            final String SQL = "INSERT INTO treatment (pid, treatment_date, begin, end, description, remark) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            final String SQL = "INSERT INTO treatment (pid, patient_name, treatment_date, begin, end, description, remark) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
             preparedStatement = this.connection.prepareStatement(SQL);
             preparedStatement.setLong(1, treatment.getPid());
-            preparedStatement.setString(2, treatment.getDate());
-            preparedStatement.setString(3, treatment.getBegin());
-            preparedStatement.setString(4, treatment.getEnd());
-            preparedStatement.setString(5, treatment.getDescription());
-            preparedStatement.setString(6, treatment.getRemarks());
+            preparedStatement.setString(2, treatment.getFullName());
+            preparedStatement.setString(3, treatment.getDate());
+            preparedStatement.setString(4, treatment.getBegin());
+            preparedStatement.setString(5, treatment.getEnd());
+            preparedStatement.setString(6, treatment.getDescription());
+            preparedStatement.setString(7, treatment.getRemarks());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

@@ -78,7 +78,7 @@ public class NewTreatmentController {
     }
 
     @FXML
-    public void handleAdd(){
+    public void handleAdd() throws SQLException {
         LocalDate date = this.datePicker.getValue();
         LocalTime begin = DateConverter.convertStringToLocalTime(textFieldBegin.getText());
         LocalTime end = DateConverter.convertStringToLocalTime(textFieldEnd.getText());
