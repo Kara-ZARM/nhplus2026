@@ -5,6 +5,7 @@ import de.hitec.nhplus.datastorage.CaregiverDao;
 import de.hitec.nhplus.model.Caregiver;
 import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.utils.AlertBuilder;
+import de.hitec.nhplus.logging.DBLogger;
 import de.hitec.nhplus.utils.DateConverter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -231,6 +232,7 @@ public class AllCaregiverController {
     private void doUpdate(TableColumn.CellEditEvent<Caregiver, String> event) {
         try {
             this.dao.update(event.getRowValue());
+            DBLogger.log("");
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -266,6 +268,7 @@ public class AllCaregiverController {
                 try {
                     DaoFactory.getDaoFactory().createCaregiverDao().deleteById(selectedItem.getCid());
                     this.tableView.getItems().remove(selectedItem);
+                    DBLogger.log(" - in CAREGIVER done by " + LoginController.getCurrentUser().getUsername() + " affected id " + selectedItem.getCid());
                 } catch (SQLException exception) {
                     exception.printStackTrace();
                 }
@@ -292,6 +295,7 @@ public class AllCaregiverController {
         String qualification = this.textFieldQualification.getText();
         try {
             this.dao.create(new Caregiver(firstName, surname, date, street, postalCode, city, taxclass, phone, qualification));
+            DBLogger.log(" in CAREGIVER done by " + LoginController.getCurrentUser().getUsername());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

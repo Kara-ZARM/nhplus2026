@@ -1,13 +1,14 @@
-package de.hitec.nhplus.utils;
+package de.hitec.nhplus.logging;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 /**
  * The utility class for logging database-changes to a log file locally in the db/ folder.
  */
 public class DBLogger {
-    private static final String LOG_FILE = "db/dbChanges.log";
+    private static final String LOG_FILE = "logging/dbChanges.log";
 
     /**
      * A Filewriter is opened to write to local disk space. Messages are seperated by the systems line seperator.
@@ -16,9 +17,10 @@ public class DBLogger {
      */
     public static void log(String message) {
         try (FileWriter fileWriter = new FileWriter(LOG_FILE,true)) {
-            fileWriter.write(message + System.lineSeparator());
+            fileWriter.write(LocalDateTime.now() + message + System.lineSeparator());
         } catch (IOException exception) {
             exception.printStackTrace();
         }
     }
+
 }
