@@ -92,8 +92,7 @@ public class EditUserController {
         if (selectedUser == null || selectedUser.equals("Create new user")){
             buttonUpdate.setText("Create User");
             buttonDelete.setDisable(true);
-            textFieldUsername.setText(null);
-            comboBoxRoleSelect.getSelectionModel().select("USER");
+            clearAllFields();
         }
         else {
             buttonUpdate.setText("Update User");
@@ -140,18 +139,22 @@ public class EditUserController {
         UserDao dao = DaoFactory.getDaoFactory().createUserDao();
         User selectedUser = dao.findByUsername(this.comboBoxUserSelect.getSelectionModel().getSelectedItem());
         //Case: Create new user
-        if(Objects.equals(selectedUser.getUsername(), "Create new user")){
+        if(selectedUser == null || Objects.equals(selectedUser.getUsername(), "Create new user")){
             if (checkIfUsernameEmpty()) {
                 return;
+            } else if (!checkPasswordValidity()) {
+                return;
             } else {
-                String username = textFieldUsername.getText();
+                dao.create(new User(textFieldUsername.getText(),BCrypt.hashpw(passwordFieldEntry.getText(),BCrypt.gensalt()),User.Role.valueOf(comboBoxRoleSelect.getSelectionModel().getSelectedItem())));
+                updateAllUserViews();
+                clearAllFields();
             }
         }
         //Case: Update user
         else {
-            if (checkIfUsernameEmpty()) {
+            //Problem: if username changed && password validity false -> still clearing fields
+            if(checkIfUsernameEmpty()){
                 return;
-                //MessageUtil.showError(labelError,"Benutzername darf nicht leer sein!");
             } else {
                 if (!Objects.equals(textFieldUsername.getText(), selectedUser.getUsername()) || !Objects.equals(comboBoxRoleSelect.getSelectionModel().getSelectedItem(), selectedUser.getRoleName())) {
                     selectedUser.setUsername(textFieldUsername.getText());
@@ -160,26 +163,44 @@ public class EditUserController {
                     DaoFactory.getDaoFactory().createUserDao().update(selectedUser);
                     updateAllUserViews();
                 }
-                //Case: empty field should not update!
-                if ((passwordFieldEntry.getText() != "" && passwordFieldConfirm.getText() == "") || (passwordFieldConfirm.getText() != "" && passwordFieldEntry.getText() == "")) {
-                    MessageUtil.showError(labelError, "Beide Passwortfelder müssen ausgefüllt sein!");
-                } else if (!Objects.equals(passwordFieldEntry.getText(), passwordFieldConfirm.getText())) {
-                    MessageUtil.showError(labelError, "Passwörter stimmen nicht überein!");
+                if (!checkPasswordValidity()){
+                    if(Objects.equals(passwordFieldEntry.getText(), "") && Objects.equals(passwordFieldConfirm.getText(), "")){
+                        labelError.setVisible(false);
+                    } else {
+                        return;
+                    }
                 } else {
                     selectedUser.setPasswordHash(BCrypt.hashpw(passwordFieldEntry.getText(), BCrypt.gensalt()));
                     DaoFactory.getDaoFactory().createUserDao().getPasswordUpdateStatement(selectedUser);
-                    //password character limit
                 }
             }
         }
     }
 
     private boolean checkIfUsernameEmpty(){
-        if(Objects.equals(textFieldUsername.getText(), "")){
-            MessageUtil.showError(labelError,"Benutzername darf nicht leer sein!");
+        if(Objects.equals(textFieldUsername.getText(), "")) {
+            MessageUtil.showError(labelError, "Benutzername darf nicht leer sein!");
             return true;
         } else {
             return false;
+        }
+    }
+
+    private boolean checkPasswordValidity(){
+        if (Objects.equals(passwordFieldEntry.getText(), "")&& Objects.equals(passwordFieldConfirm.getText(), "")) {
+            MessageUtil.showError(labelError,"Das Passwort darf nicht leer sein!");
+            return false;
+        } else if ((!Objects.equals(passwordFieldEntry.getText(), "") && Objects.equals(passwordFieldConfirm.getText(), "")) || (!Objects.equals(passwordFieldConfirm.getText(), "") && Objects.equals(passwordFieldEntry.getText(), ""))) {
+            MessageUtil.showError(labelError, "Beide Passwortfelder müssen ausgefüllt sein!");
+            return false;
+        } else if (!Objects.equals(passwordFieldEntry.getText(), passwordFieldConfirm.getText())) {
+            MessageUtil.showError(labelError, "Passwörter stimmen nicht überein!");
+            return false;
+        } else if (passwordFieldEntry.getText().length()<10){
+            MessageUtil.showError(labelError,"Das Passwort muss mindestens 10 Zeichen lang sein!");
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -188,5 +209,14 @@ public class EditUserController {
         if (parentController != null) {
             parentController.refreshUserTableView();
         }
+    }
+
+    private void clearAllFields(){
+        textFieldUsername.setText("");
+        passwordFieldEntry.setText("");
+        passwordFieldConfirm.setText("");
+        comboBoxRoleSelect.getSelectionModel().select("USER");
+        labelError.setText("");
+        labelError.setVisible(false);
     }
 }
