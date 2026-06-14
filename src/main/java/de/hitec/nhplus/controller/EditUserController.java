@@ -118,7 +118,7 @@ public class EditUserController {
         User selectedUser = dao.findByUsername(this.comboBoxUserSelect.getSelectionModel().getSelectedItem());
 
         if(selectedUser.getUid()==LoginController.getCurrentUser().getUid()){
-            MessageUtil.showError(labelError,"Der eingeloggte Nutzer kann nicht gelöscht werden!");
+            MessageUtil.showError(labelError,"Der eingeloggte Nutzer darf nicht gelöscht werden!");
         } else {
             Optional<ButtonType> result = AlertBuilder.alertForDelete();
             if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -148,32 +148,30 @@ public class EditUserController {
                 dao.create(new User(textFieldUsername.getText(),BCrypt.hashpw(passwordFieldEntry.getText(),BCrypt.gensalt()),User.Role.valueOf(comboBoxRoleSelect.getSelectionModel().getSelectedItem())));
                 updateAllUserViews();
                 clearAllFields();
+                MessageUtil.showSuccess(labelError,"Benutzer*in erfolgreich angelegt!");
             }
         }
         //Case: Update user
         else {
-            //Problem: if username changed && password validity false -> still clearing fields
-            if(checkIfUsernameEmpty()){
-                return;
-            } else {
-                if (!Objects.equals(textFieldUsername.getText(), selectedUser.getUsername()) || !Objects.equals(comboBoxRoleSelect.getSelectionModel().getSelectedItem(), selectedUser.getRoleName())) {
-                    selectedUser.setUsername(textFieldUsername.getText());
-                    //IMP: insert failsafe so that current user cannot change from admin role!!!
-                    selectedUser.setRole(User.Role.valueOf(comboBoxRoleSelect.getSelectionModel().getSelectedItem()));
-                    DaoFactory.getDaoFactory().createUserDao().update(selectedUser);
-                    updateAllUserViews();
-                }
-                if (!checkPasswordValidity()){
-                    if(Objects.equals(passwordFieldEntry.getText(), "") && Objects.equals(passwordFieldConfirm.getText(), "")){
-                        labelError.setVisible(false);
-                    } else {
-                        return;
-                    }
+            if(!Objects.equals(passwordFieldEntry.getText(), "") || !Objects.equals(passwordFieldConfirm.getText(), "")){
+                if(!checkPasswordValidity()){
+                    return;
                 } else {
                     selectedUser.setPasswordHash(BCrypt.hashpw(passwordFieldEntry.getText(), BCrypt.gensalt()));
-                    DaoFactory.getDaoFactory().createUserDao().getPasswordUpdateStatement(selectedUser);
                 }
             }
+            if(checkIfUsernameEmpty()){
+                return;
+            }
+            if((LoginController.getCurrentUser().getUid()==selectedUser.getUid()) && (!Objects.equals(selectedUser.getRoleName(), comboBoxRoleSelect.getSelectionModel().getSelectedItem()))){
+                MessageUtil.showError(labelError,"Der eingeloggte Nutzer darf seine Rolle nicht ändern!");
+                return;
+            }
+            selectedUser.setUsername(textFieldUsername.getText());
+            selectedUser.setRole(User.Role.valueOf(comboBoxRoleSelect.getSelectionModel().getSelectedItem()));
+            DaoFactory.getDaoFactory().createUserDao().update(selectedUser);
+            updateAllUserViews();
+            MessageUtil.showSuccess(labelError,"Benutzer*in erfolgreich aktualisiert!");
         }
     }
 

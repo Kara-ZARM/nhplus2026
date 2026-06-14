@@ -138,12 +138,14 @@ public class UserDao extends DaoImp<User>{
             final String SQL =
                     "UPDATE user SET " +
                             "username = ?, " +
+                            "password_hash = ?, " +
                             "role = ? " +
                             "WHERE uid = ?";
             preparedStatement = this.connection.prepareStatement(SQL);
             preparedStatement.setString(1, user.getUsername());
-            preparedStatement.setString(2, user.getRole().name());
-            preparedStatement.setLong(3, user.getUid());
+            preparedStatement.setString(2, user.getPasswordHash());
+            preparedStatement.setString(3, user.getRole().name());
+            preparedStatement.setLong(4, user.getUid());
         } catch (SQLException exception){
             exception.printStackTrace();
         }
@@ -167,31 +169,6 @@ public class UserDao extends DaoImp<User>{
             exception.printStackTrace();
         }
         return preparedStatement;
-    }
-
-    /**
-     * Generates a <code>PreparedStatement</code> to update the given user's <code>password_hash</code> and <code>salt</code>, identified
-     * by the id of the user (uid).
-     *
-     * @param user User object to update.
-     * @return <code>PreparedStatement</code> to update the given user.
-     */
-    public void getPasswordUpdateStatement(User user) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        try{
-            final String SQL =
-                    "UPDATE user SET " +
-                            "password_hash = ? " +
-                            //"salt = ? " +
-                            "WHERE uid = ?";
-            preparedStatement = this.connection.prepareStatement(SQL);
-            preparedStatement.setString(1, user.getPasswordHash());
-            //preparedStatement.setString(2, PasswordUtil.generateSalt());
-            preparedStatement.setLong(2, user.getUid());
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
-        preparedStatement.executeUpdate();
     }
 
     /**

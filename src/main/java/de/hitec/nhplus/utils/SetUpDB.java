@@ -166,6 +166,7 @@ public class SetUpDB {
             dao.create(new Treatment(14, 4, convertStringToLocalDate("2023-08-24"), convertStringToLocalTime("09:30"), convertStringToLocalTime("10:15"), "KG", "Lympfdrainage"));
             dao.create(new Treatment(16, 6, convertStringToLocalDate("2023-08-31"), convertStringToLocalTime("13:30"), convertStringToLocalTime("13:45"), "Toilettengang", "Hilfe beim Toilettengang; Patientin klagt über Schmerzen beim Stuhlgang. Gabe von Iberogast"));
             dao.create(new Treatment(17, 6, convertStringToLocalDate("2023-09-01"), convertStringToLocalTime("16:00"), convertStringToLocalTime("17:00"), "KG", "Massage der Extremitäten zur Verbesserung der Durchblutung"));
+            dao.create(new Treatment(666,7,convertStringToLocalDate("2023-09-08"),convertStringToLocalTime("11:45"),convertStringToLocalTime("12:00"),"Gespräch","Der Patient redet darüber seinen \"einen Ring\" verloren zu haben. Er behauptet er gäbe ihm unvorstellbare Macht. Der Patient starrt andere Patient*innen regelrecht mit einem brennenden Auge an."));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -187,6 +188,7 @@ public class SetUpDB {
             dao.create(new User("admin",BCrypt.hashpw("placeholder", BCrypt.gensalt()), adminRole));
             dao.create(new User("user", BCrypt.hashpw("placeholder", BCrypt.gensalt()),userRole));
             dao.create(new User("BCrypt", BCrypt.hashpw("placeholder", BCrypt.gensalt()),adminRole));
+            dao.create(new User("newt",BCrypt.hashpw("placeholder",BCrypt.gensalt()),userRole));
         } catch (SQLException exception){
             exception.printStackTrace();
         }
