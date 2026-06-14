@@ -128,130 +128,49 @@ public class AllPatientController {
         this.textFieldAssets.textProperty().addListener(inputNewPatientListener);
     }
 
+
     /**
-     * When a cell of the column with first names was changed, this method will be called, to persist the change.
+     * When a cell of a column was changed, this method will be called, to persist the change.
+     * The method first validates whether the new input is valid (not blank). If the input is invalid,
+     * a warning dialog is displayed and the change is reverted in the UI. If the input is valid,
+     * the corresponding patient attribute is updated via a switch statement and the change is
+     * persisted to the database.
      *
      * @param event Event including the changed object and the change.
      */
-    @FXML
-    public void handleOnEditFirstname(TableColumn.CellEditEvent<Patient, String> event) {
-        if (event.getNewValue().isBlank()) {
+
+    public void handleOnEdit(TableColumn.CellEditEvent<Patient, String> event) {
+        String newValue = event.getNewValue();
+
+        if (newValue == null || newValue.isBlank()) {
 
             Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 event.getTableView().refresh();
             }
-        } else {
-
-            event.getRowValue().setFirstName(event.getNewValue());
-            this.doUpdate(event);
+            return;
         }
-    }
 
-    /**
-     * When a cell of the column with surnames was changed, this method will be called, to persist the change.
-     *
-     * @param event Event including the changed object and the change.
-     */
-    @FXML
-    public void handleOnEditSurname(TableColumn.CellEditEvent<Patient, String> event) {
-        if (event.getNewValue().isBlank()) {
+        Patient patient = event.getRowValue();
+        String columnId = event.getTableColumn().getId();
 
-            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                event.getTableView().refresh();
+        if (columnId == null) {
+            return;
+        }
+        switch (columnId) {
+            case "columnSurname" -> patient.setSurname(newValue);
+            case "columnFirstName" -> patient.setFirstName(newValue);
+            case "columnDateOfBirth" -> patient.setDateOfBirth(newValue);
+            case "columnCareLevel" -> patient.setCareLevel(newValue);
+            case "columnRoomNumber" -> patient.setRoomNumber(newValue);
+            case "columnAssets" -> patient.setAssets(newValue);
+            default -> {
+                return;
             }
-        } else {
-
-            event.getRowValue().setSurname(event.getNewValue());
-            this.doUpdate(event);
         }
-    }
+        this.doUpdate(event);
 
-    /**
-     * When a cell of the column with dates of birth was changed, this method will be called, to persist the change.
-     *
-     * @param event Event including the changed object and the change.
-     */
-    @FXML
-    public void handleOnEditDateOfBirth(TableColumn.CellEditEvent<Patient, String> event) {
-        if (event.getNewValue().isBlank()) {
-
-            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                event.getTableView().refresh();
-            }
-        } else {
-
-            event.getRowValue().setDateOfBirth(event.getNewValue());
-            this.doUpdate(event);
-        }
-    }
-
-    /**
-     * When a cell of the column with care levels was changed, this method will be called, to persist the change.
-     *
-     * @param event Event including the changed object and the change.
-     */
-    @FXML
-    public void handleOnEditCareLevel(TableColumn.CellEditEvent<Patient, String> event) {
-        if (event.getNewValue().isBlank()) {
-
-            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                event.getTableView().refresh();
-            }
-        } else {
-
-            event.getRowValue().setCareLevel(event.getNewValue());
-            this.doUpdate(event);
-        }
-    }
-
-    /**
-     * When a cell of the column with room numbers was changed, this method will be called, to persist the change.
-     *
-     * @param event Event including the changed object and the change.
-     */
-    @FXML
-    public void handleOnEditRoomNumber(TableColumn.CellEditEvent<Patient, String> event) {
-        if (event.getNewValue().isBlank()) {
-
-            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                event.getTableView().refresh();
-            }
-        } else {
-
-            event.getRowValue().setRoomNumber(event.getNewValue());
-            this.doUpdate(event);
-        }
-    }
-
-    /**
-     * When a cell of the column with assets was changed, this method will be called, to persist the change.
-     *
-     * @param event Event including the changed object and the change.
-     */
-    @FXML
-    public void handleOnEditAssets(TableColumn.CellEditEvent<Patient, String> event) {
-        if (event.getNewValue().isBlank()) {
-
-            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                event.getTableView().refresh();
-            }
-        } else {
-
-            event.getRowValue().setAssets(event.getNewValue());
-            this.doUpdate(event);
-        }
     }
 
     /**
