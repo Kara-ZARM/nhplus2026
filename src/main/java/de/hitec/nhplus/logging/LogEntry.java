@@ -39,12 +39,14 @@ public class LogEntry {
 
     @Override
     public String toString() {
-        return "LogEntry{" +
-                "timestamp=" + timestamp +
-                ", operationType=" + operationType +
-                ", tableName='" + tableName + '\'' +
-                ", recordId=" + recordId +
-                ", userId='" + userId + '\'' +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\n");
+        sb.append("  \"timestamp\": \"").append(timestamp).append("\",\n");
+        sb.append("  \"operationType\": \"").append(operationType).append("\",\n");
+        sb.append("  \"tableName\": \"").append(tableName).append("\",\n");
+        sb.append("  \"recordId\": ").append(recordId).append(",\n");
+        sb.append("  \"userId\": \"").append(userId).append("\"\n");
+        sb.append("}");
+        return sb.toString();
     }
 }
