@@ -1,18 +1,23 @@
 package de.hitec.nhplus.model;
 
+import de.hitec.nhplus.datastorage.DaoFactory;
+import de.hitec.nhplus.datastorage.PatientDao;
 import de.hitec.nhplus.utils.DateConverter;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Treatment {
     private long tid;
     private final long pid;
+    private String fullName;
     private LocalDate date;
     private LocalTime begin;
     private LocalTime end;
     private String description;
     private String remarks;
+    PatientDao dao = DaoFactory.getDaoFactory().createPatientDao();
 
     /**
      * Constructor to initiate an object of class <code>Treatment</code> with the given parameter. Use this constructor
@@ -26,8 +31,9 @@ public class Treatment {
      * @param remarks Remarks to the treatment.
      */
     public Treatment(long pid, LocalDate date, LocalTime begin,
-                     LocalTime end, String description, String remarks) {
+                     LocalTime end, String description, String remarks) throws SQLException {
         this.pid = pid;
+        this.fullName = dao.read(pid).getSurname() + ", " + dao.read(pid).getFirstName();
         this.date = date;
         this.begin = begin;
         this.end = end;
@@ -48,9 +54,10 @@ public class Treatment {
      * @param remarks Remarks to the treatment.
      */
     public Treatment(long tid, long pid, LocalDate date, LocalTime begin,
-                     LocalTime end, String description, String remarks) {
+                     LocalTime end, String description, String remarks) throws SQLException {
         this.tid = tid;
         this.pid = pid;
+        this.fullName = dao.read(pid).getSurname() + ", " + dao.read(pid).getFirstName();
         this.date = date;
         this.begin = begin;
         this.end = end;
@@ -105,6 +112,8 @@ public class Treatment {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
+
+    public String getFullName(){return this.fullName;}
 
     public String toString() {
         return "\nBehandlung" + "\nTID: " + this.tid +

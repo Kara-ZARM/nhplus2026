@@ -168,6 +168,12 @@ public class AllCaregiverController {
             HboxInsert.setDisable(true);
             HboxInsert.setVisible(false);
             tableView.setEditable(false);
+            columnDateOfBirth.setVisible(false);
+            columnStreet.setVisible(false);
+            columnPostalCode.setVisible(false);
+            columnCity.setVisible(false);
+            columnTaxId.setVisible(false);
+            columnQualification.setVisible(false);
         }
     }
 

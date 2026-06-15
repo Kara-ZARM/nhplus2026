@@ -78,7 +78,7 @@ public class NewTreatmentController {
     }
 
     @FXML
-    public void handleAdd(){
+    public void handleAdd() throws SQLException {
         LocalDate date = this.datePicker.getValue();
         LocalTime begin = DateConverter.convertStringToLocalTime(textFieldBegin.getText());
         LocalTime end = DateConverter.convertStringToLocalTime(textFieldEnd.getText());
@@ -86,8 +86,9 @@ public class NewTreatmentController {
         String remarks = textAreaRemarks.getText();
         Treatment treatment = new Treatment(patient.getPid(), date, begin, end, description, remarks);
         createTreatment(treatment);
-        controller.readAllAndShowInTableView();
+        //controller.readAllAndShowInTableView();
         stage.close();
+        controller.handleComboBox();
     }
 
     private void createTreatment(Treatment treatment) {
