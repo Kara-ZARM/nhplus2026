@@ -3,6 +3,7 @@ package de.hitec.nhplus.controller;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.UserDao;
 import de.hitec.nhplus.model.User;
+import de.hitec.nhplus.utils.MessageUtil;
 import de.hitec.nhplus.utils.PasswordUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,11 +15,13 @@ import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 
 /**
  * The <code>LoginController</code> contains the logic that handles the login and logout process.
+ * Old SHA-256 Code commented out for documentation reasons.
  */
 
 public class LoginController {
@@ -59,16 +62,18 @@ public class LoginController {
         String username = this.textFieldUsername.getText();
         String password = this.passwordField.getText();
         String password_hash = null;
-        String salt = null;
+        //String salt = null;
         try {
             User user = dao.findByUsername(username);
             if(user==null){
-                showError("Wrong username.");
+                MessageUtil.showError(labelError,"Wrong username.");
                 return;
             }
             password_hash = user.getPasswordHash();
-            salt = user.getSalt();
-            if(PasswordUtil.verify(password, salt, password_hash)){
+            //salt = user.getSalt();
+
+            //if(PasswordUtil.verify(password, salt, password_hash)){
+            if(BCrypt.checkpw(password, password_hash)){
                 currentUser = user;
                 dao.getLastLoginUpdateStatement(user);
                 FXMLLoader loader = new FXMLLoader(
@@ -81,22 +86,13 @@ public class LoginController {
                 Stage stage = (Stage) buttonLogin.getScene().getWindow();
                 stage.setScene(mainScene);
             } else {
-                showError("Wrong password.");
+                MessageUtil.showError(labelError,"Wrong password.");
             }
         } catch (SQLException exception){
             exception.printStackTrace();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-    }
-
-    /**
-     * <code>showError</code> displays an error at the position of <code>labelError</code>.
-     * @param message is the message that is being displayed.
-     */
-    public void showError(String message){
-        labelError.setVisible(true);
-        labelError.setText(message);
     }
 
     /**

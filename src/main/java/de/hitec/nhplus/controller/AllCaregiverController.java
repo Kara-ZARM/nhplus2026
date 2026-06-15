@@ -167,6 +167,7 @@ public class AllCaregiverController {
         if(LoginController.getCurrentUser().getRole() != ADMIN){
             HboxInsert.setDisable(true);
             HboxInsert.setVisible(false);
+            tableView.setEditable(false);
         }
     }
 
