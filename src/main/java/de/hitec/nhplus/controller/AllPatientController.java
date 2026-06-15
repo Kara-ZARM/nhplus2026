@@ -164,7 +164,16 @@ public class AllPatientController {
         switch (columnId) {
             case "columnSurname" -> patient.setSurname(newValue);
             case "columnFirstName" -> patient.setFirstName(newValue);
-            case "columnDateOfBirth" -> patient.setDateOfBirth(newValue);
+            case "columnDateOfBirth" -> {
+            if (DateConverter.isValidDate(newValue)) {
+                patient.setDateOfBirth(newValue);
+            } else {
+                Optional<ButtonType> result = AlertBuilder.alertForWrongDateFormat();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    event.getTableView().refresh();
+                }
+            }
+        }
             case "columnCareLevel" -> patient.setCareLevel(newValue);
             case "columnRoomNumber" -> patient.setRoomNumber(newValue);
             case "columnAssets" -> patient.setAssets(newValue);

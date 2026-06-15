@@ -167,7 +167,7 @@ public class AllCaregiverController {
         this.textFieldTaxId.textProperty().addListener(inputNewCaregiverListener);
         this.textFieldQualification.textProperty().addListener(inputNewCaregiverListener);
 
-        if(LoginController.getCurrentUser().getRole() != ADMIN){
+        if (LoginController.getCurrentUser().getRole() != ADMIN) {
             HboxInsert.setDisable(true);
             HboxInsert.setVisible(false);
             tableView.setEditable(false);
@@ -212,7 +212,16 @@ public class AllCaregiverController {
         switch (columnId) {
             case "columnSurname" -> caregiver.setSurname(newValue);
             case "columnFirstName" -> caregiver.setFirstName(newValue);
-            case "columnDateOfBirth" -> caregiver.setDateOfBirth(newValue);
+            case "columnDateOfBirth" -> {
+                if (DateConverter.isValidDate(newValue)) {
+                    caregiver.setDateOfBirth(newValue);
+                } else {
+                    Optional<ButtonType> result = AlertBuilder.alertForWrongDateFormat();
+                    if (result.isPresent() && result.get() == ButtonType.OK) {
+                        event.getTableView().refresh();
+                    }
+                }
+            }
             case "columnPhoneNumber" -> caregiver.setPhoneNumber(newValue);
             case "columnStreet" -> caregiver.setStreet(newValue);
             case "columnPostalCode" -> caregiver.setPostalcode(newValue);

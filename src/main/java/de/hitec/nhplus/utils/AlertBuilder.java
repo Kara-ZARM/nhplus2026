@@ -33,4 +33,12 @@ public class AlertBuilder {
 
         return alert.showAndWait();
     }
+
+    public static Optional<ButtonType> alertForWrongDateFormat(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Ungültiges Format, Bitte neue Eingabe im Format: yyyy-MM-dd");
+
+        return alert.showAndWait();
+    }
+
 }
