@@ -306,12 +306,6 @@ public class AllCaregiverController {
         String firstName = this.textFieldFirstName.getText();
         String phone = this.textFieldPhoneNumber.getText();
         String birthday = this.textFieldDateOfBirth.getText();
-        // TODO hier weiter machen
-        if (!DateConverter.isValidDate(birthday)) {
-            AlertBuilder.alertForWrongDateFormat();
-
-            return;
-        }
         LocalDate date = DateConverter.convertStringToLocalDate(birthday);
         String street = this.textFieldStreet.getText();
         String postalCode = this.textFieldPostalCode.getText();
