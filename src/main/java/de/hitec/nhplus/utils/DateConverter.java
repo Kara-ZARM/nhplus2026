@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class DateConverter {
 
@@ -31,7 +32,9 @@ public class DateConverter {
         return LocalDateTime.parse(datetime, DateTimeFormatter.ofPattern(DATETIME_FORMAT));
     }
 
+    // TODO dateOfBirth spinnt
     public static String convertLocalDateToString(LocalDate date) {
+
         return date.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
     }
 
@@ -50,4 +53,14 @@ public class DateConverter {
         }
         return datetime.format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
     }
+
+    public static boolean isValidDate(String dateStr) {
+        try {
+            LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_FORMAT));
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
 }
