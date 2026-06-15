@@ -3,6 +3,7 @@ package de.hitec.nhplus.controller;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.CaregiverDao;
 import de.hitec.nhplus.model.Caregiver;
+import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.utils.AlertBuilder;
 import de.hitec.nhplus.utils.DateConverter;
 import javafx.beans.value.ChangeListener;
@@ -170,197 +171,49 @@ public class AllCaregiverController {
     }
 
     /**
-     * When a cell of the column with first names was changed, this method will be called, to persist the change.
+     * When a cell of a column was changed, this method will be called, to persist the change.
+     * The method first validates whether the new input is valid (not blank). If the input is invalid,
+     * a warning dialog is displayed and the change is reverted in the UI. If the input is valid,
+     * the corresponding patient attribute is updated via a switch statement and the change is
+     * persisted to the database.
      *
      * @param event Event including the changed object and the change.
      */
 
-    @FXML
-    public void handleOnEditFirstname(TableColumn.CellEditEvent<Caregiver, String> event) {
-        if (event.getNewValue().isBlank()) {
+    public void handleOnEdit(TableColumn.CellEditEvent<Caregiver, String> event) {
+        String newValue = event.getNewValue();
+
+        if (newValue == null || newValue.isBlank()) {
 
             Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 event.getTableView().refresh();
             }
-        } else {
-
-            event.getRowValue().setFirstName(event.getNewValue());
-            this.doUpdate(event);
+            return;
         }
 
-    }
+        Caregiver caregiver = event.getRowValue();
+        String columnId = event.getTableColumn().getId();
 
-    /**
-     * When a cell of the column with surnames was changed, this method will be called, to persist the change.
-     *
-     * @param event Event including the changed object and the change.
-     */
-    @FXML
-    public void handleOnEditSurname(TableColumn.CellEditEvent<Caregiver, String> event) {
-        if (event.getNewValue().isBlank()) {
-
-            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                event.getTableView().refresh();
+        if (columnId == null) {
+            return;
+        }
+        switch (columnId) {
+            case "columnSurname" -> caregiver.setSurname(newValue);
+            case "columnFirstName" -> caregiver.setFirstName(newValue);
+            case "columnDateOfBirth" -> caregiver.setDateOfBirth(newValue);
+            case "columnPhoneNumber" -> caregiver.setPhoneNumber(newValue);
+            case "columnStreet" -> caregiver.setStreet(newValue);
+            case "columnPostalCode" -> caregiver.setPostalcode(newValue);
+            case "columnCity" -> caregiver.setCity(newValue);
+            case "columnTaxId" -> caregiver.setTaxid(newValue);
+            case "columnQualification" -> caregiver.setQualification(newValue);
+            default -> {
+                return;
             }
-        } else {
-            event.getRowValue().setSurname(event.getNewValue());
-            this.doUpdate(event);
         }
-
-    }
-
-    /**
-     * When a cell of the column with dates of birth was changed, this method will be called, to persist the change.
-     *
-     * @param event Event including the changed object and the change.
-     */
-    @FXML
-    public void handleOnEditDateOfBirth(TableColumn.CellEditEvent<Caregiver, String> event) {
-        if (event.getNewValue().isBlank()) {
-
-            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                event.getTableView().refresh();
-            }
-        } else {
-
-            event.getRowValue().setDateOfBirth(event.getNewValue());
-            this.doUpdate(event);
-        }
-
-    }
-    /**
-     * When a cell of the column with phonenumber was changed, this method will be called, to persist the change.
-     *
-     * @param event Event including the changed object and the change.
-     */
-    @FXML
-    public void handleOnEditPhoneNumber(TableColumn.CellEditEvent<Caregiver, String> event) {
-        if (event.getNewValue().isBlank()) {
-
-            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                event.getTableView().refresh();
-            }
-        } else {
-
-            event.getRowValue().setPhoneNumber(event.getNewValue());
-            this.doUpdate(event);
-        }
-
-    }
-    /**
-     * When a cell of the column with street was changed, this method will be called, to persist the change.
-     *
-     * @param event Event including the changed object and the change.
-     */
-    @FXML
-    public void handleOnEditStreet(TableColumn.CellEditEvent<Caregiver, String> event) {
-        if (event.getNewValue().isBlank()) {
-
-            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                event.getTableView().refresh();
-            }
-        } else {
-
-            event.getRowValue().setStreet(event.getNewValue());
-            this.doUpdate(event);
-        }
-
-    }
-    /**
-     * When a cell of the column with postalcode was changed, this method will be called, to persist the change.
-     *
-     * @param event Event including the changed object and the change.
-     */
-    @FXML
-    public void handleOnEditPostalcode(TableColumn.CellEditEvent<Caregiver, String> event) {
-        if (event.getNewValue().isBlank()) {
-
-            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                event.getTableView().refresh();
-            }
-        } else {
-
-            event.getRowValue().setPostalcode(event.getNewValue());
-            this.doUpdate(event);
-        }
-
-    }
-    /**
-     * When a cell of the column with city was changed, this method will be called, to persist the change.
-     *
-     * @param event Event including the changed object and the change.
-     */
-    @FXML
-    public void handleOnEditCity(TableColumn.CellEditEvent<Caregiver, String> event) {
-        if (event.getNewValue().isBlank()) {
-
-            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                event.getTableView().refresh();
-            }
-        } else {
-
-            event.getRowValue().setCity(event.getNewValue());
-            this.doUpdate(event);
-        }
-
-    }
-
-    /**
-     * When a cell of the column with taxidwas changed, this method will be called, to persist the change.
-     *
-     * @param event Event including the changed object and the change.
-     */
-    @FXML
-    public void handleOnEditTaxid(TableColumn.CellEditEvent<Caregiver, String> event) {
-        if (event.getNewValue().isBlank()) {
-
-            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                event.getTableView().refresh();
-            }
-        } else {
-
-            event.getRowValue().setTaxid(event.getNewValue());
-            this.doUpdate(event);
-        }
-
-    }
-
-    /**
-     * When a cell of the column with qualification was changed, this method will be called, to persist the change.
-     *
-     * @param event Event including the changed object and the change.
-     */
-    @FXML
-    public void handleOnEditQualification(TableColumn.CellEditEvent<Caregiver, String> event) {
-        if (event.getNewValue().isBlank()) {
-
-            Optional<ButtonType> result = AlertBuilder.alertBuildForEdits();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                event.getTableView().refresh();
-            }
-        } else {
-
-            event.getRowValue().setQualification(event.getNewValue());
-            this.doUpdate(event);
-        }
-
+        this.doUpdate(event);
     }
 
     /**
@@ -412,19 +265,6 @@ public class AllCaregiverController {
             }
         }
     }
-    /**
-     * This method handles events fired by the button to delete a caregiver. It opens an alert to reassure the infinitely deletion of the caregivers data.
-     * On confirmation (press 'OK')  {@link #handleDelete()} is called.
-     */
-    @FXML
-    public Optional<ButtonType> alertForDelete() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-
-        alert.setHeaderText("Patient*in endgültig löschen?");
-
-        return alert.showAndWait();
-    }
-
 
     /**
      * This method handles the events fired by the button to add a caregiver. It collects the data from the
