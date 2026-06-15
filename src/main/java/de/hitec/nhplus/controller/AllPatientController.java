@@ -72,9 +72,6 @@ public class AllPatientController {
     @FXML
     private TextField textFieldRoomNumber;
 
-    @FXML
-    private TextField textFieldAssets;
-
     private final ObservableList<Patient> patients = FXCollections.observableArrayList();
     private PatientDao dao;
 
@@ -105,9 +102,6 @@ public class AllPatientController {
         this.columnRoomNumber.setCellValueFactory(new PropertyValueFactory<>("roomNumber"));
         this.columnRoomNumber.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        this.columnAssets.setCellValueFactory(new PropertyValueFactory<>("assets"));
-        this.columnAssets.setCellFactory(TextFieldTableCell.forTableColumn());
-
         //Anzeigen der Daten
         this.tableView.setItems(this.patients);
 
@@ -128,7 +122,6 @@ public class AllPatientController {
         this.textFieldDateOfBirth.textProperty().addListener(inputNewPatientListener);
         this.textFieldCareLevel.textProperty().addListener(inputNewPatientListener);
         this.textFieldRoomNumber.textProperty().addListener(inputNewPatientListener);
-        this.textFieldAssets.textProperty().addListener(inputNewPatientListener);
     }
 
 
@@ -176,7 +169,6 @@ public class AllPatientController {
             }
             case "columnCareLevel" -> patient.setCareLevel(newValue);
             case "columnRoomNumber" -> patient.setRoomNumber(newValue);
-            case "columnAssets" -> patient.setAssets(newValue);
             default -> {
                 return;
             }
@@ -258,9 +250,8 @@ public class AllPatientController {
         LocalDate date = DateConverter.convertStringToLocalDate(birthday);
         String careLevel = this.textFieldCareLevel.getText();
         String roomNumber = this.textFieldRoomNumber.getText();
-        String assets = this.textFieldAssets.getText();
 
-        Patient patient = new Patient(firstName, surname, date, careLevel, roomNumber, assets);
+        Patient patient = new Patient(firstName, surname, date, careLevel, roomNumber);
 
         try {
             this.dao.create(patient);
@@ -285,7 +276,6 @@ public class AllPatientController {
         this.textFieldDateOfBirth.clear();
         this.textFieldCareLevel.clear();
         this.textFieldRoomNumber.clear();
-        this.textFieldAssets.clear();
     }
 
     private boolean areInputDataValid() {
@@ -297,7 +287,6 @@ public class AllPatientController {
                 !this.textFieldFirstName.getText().isBlank() &&
                 !this.textFieldSurname.getText().isBlank() &&
                 !this.textFieldCareLevel.getText().isBlank() &&
-                !this.textFieldRoomNumber.getText().isBlank() &&
-                !this.textFieldAssets.getText().isBlank();
+                !this.textFieldRoomNumber.getText().isBlank();
     }
 }
