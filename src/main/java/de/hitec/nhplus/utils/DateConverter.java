@@ -32,7 +32,6 @@ public class DateConverter {
         return LocalDateTime.parse(datetime, DateTimeFormatter.ofPattern(DATETIME_FORMAT));
     }
 
-    // TODO dateOfBirth spinnt
     public static String convertLocalDateToString(LocalDate date) {
 
         return date.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
@@ -54,6 +53,13 @@ public class DateConverter {
         return datetime.format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
     }
 
+    /**
+     * This method checks for a valid format of an Input when editing the field "Geburtsdatum" in the patient and caregiver views.
+     * Valid format is @value #DATE_FORMAT
+     * @param dateStr is the String that will get checked
+     * @return <code>true</code> if format is valid
+     * @return <code>false</code> if format is invalid
+     */
     public static boolean isValidDate(String dateStr) {
         try {
             LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_FORMAT));
