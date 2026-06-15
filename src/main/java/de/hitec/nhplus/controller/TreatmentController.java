@@ -3,6 +3,9 @@ package de.hitec.nhplus.controller;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.PatientDao;
 import de.hitec.nhplus.datastorage.TreatmentDao;
+import de.hitec.nhplus.logging.DBLogger;
+import de.hitec.nhplus.logging.LogEntry;
+import de.hitec.nhplus.logging.OperationType;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -81,6 +84,11 @@ public class TreatmentController {
         TreatmentDao dao = DaoFactory.getDaoFactory().createTreatmentDao();
         try {
             dao.update(treatment);
+            DBLogger.log(new LogEntry(
+                    OperationType.UPDATE,
+                    "treatment",
+                    "" + this.treatment.getTid(),
+                    LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

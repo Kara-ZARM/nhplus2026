@@ -37,3 +37,7 @@ test-results/
 
 ### OS ###
 .DS_Store
+
+### DB ###
+db/nursingHome.db
+db/dbChanges.log

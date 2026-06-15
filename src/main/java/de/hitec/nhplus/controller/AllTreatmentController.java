@@ -4,6 +4,9 @@ import de.hitec.nhplus.Main;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.PatientDao;
 import de.hitec.nhplus.datastorage.TreatmentDao;
+import de.hitec.nhplus.logging.DBLogger;
+import de.hitec.nhplus.logging.LogEntry;
+import de.hitec.nhplus.logging.OperationType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -154,6 +157,11 @@ public class AllTreatmentController {
         TreatmentDao dao = DaoFactory.getDaoFactory().createTreatmentDao();
         try {
             dao.deleteById(t.getTid());
+            DBLogger.log(new LogEntry(
+                    OperationType.DELETE,
+                    "treatment",
+                    "" + t.getTid(),
+                    LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

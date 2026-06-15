@@ -2,9 +2,12 @@ package de.hitec.nhplus.controller;
 
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.CaregiverDao;
+import de.hitec.nhplus.logging.LogEntry;
+import de.hitec.nhplus.logging.OperationType;
 import de.hitec.nhplus.model.Caregiver;
 import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.utils.AlertBuilder;
+import de.hitec.nhplus.logging.DBLogger;
 import de.hitec.nhplus.utils.DateConverter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -231,6 +234,11 @@ public class AllCaregiverController {
     private void doUpdate(TableColumn.CellEditEvent<Caregiver, String> event) {
         try {
             this.dao.update(event.getRowValue());
+            DBLogger.log(new LogEntry(
+                    OperationType.UPDATE,
+                    "caregiver",
+                    "" + event.getRowValue().getCid(),
+                    LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -266,6 +274,11 @@ public class AllCaregiverController {
                 try {
                     DaoFactory.getDaoFactory().createCaregiverDao().deleteById(selectedItem.getCid());
                     this.tableView.getItems().remove(selectedItem);
+                    DBLogger.log(new LogEntry(
+                            OperationType.DELETE,
+                            "caregiver",
+                            "" + selectedItem.getCid(),
+                            LoginController.getCurrentUser().getUsername()));
                 } catch (SQLException exception) {
                     exception.printStackTrace();
                 }
@@ -290,8 +303,16 @@ public class AllCaregiverController {
         String city = this.textFieldCity.getText();
         String taxclass = this.textFieldTaxId.getText();
         String qualification = this.textFieldQualification.getText();
+
+        Caregiver caregiver = new Caregiver(firstName, surname, date, street, postalCode, city, taxclass, phone, qualification);
+
         try {
-            this.dao.create(new Caregiver(firstName, surname, date, street, postalCode, city, taxclass, phone, qualification));
+            this.dao.create(caregiver);
+            DBLogger.log(new LogEntry(
+                    OperationType.CREATE,
+                    "caregiver",
+                    caregiver.getSurname() + caregiver.getFirstName(),
+                    LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
