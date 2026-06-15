@@ -196,7 +196,7 @@ public class AllPatientController {
             DBLogger.log(new LogEntry(
                     OperationType.UPDATE,
                     "patient",
-                    "" + event.getRowValue().getPid(),
+                    event.getRowValue().getPid(),
                     LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();
@@ -235,7 +235,7 @@ public class AllPatientController {
                     DBLogger.log(new LogEntry(
                             OperationType.DELETE,
                             "patient",
-                            "" + selectedItem.getPid(),
+                            selectedItem.getPid(),
                             LoginController.getCurrentUser().getUsername()));
                     this.tableView.getItems().remove(selectedItem);
                 } catch (SQLException exception) {
@@ -267,7 +267,7 @@ public class AllPatientController {
             DBLogger.log(new LogEntry(
                     OperationType.CREATE,
                     "patient",
-                    patient.getSurname() + patient.getFirstName(),
+                    this.dao.getLastCreatedId(),
                     LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();

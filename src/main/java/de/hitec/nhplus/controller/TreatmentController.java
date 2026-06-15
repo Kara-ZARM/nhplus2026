@@ -87,7 +87,7 @@ public class TreatmentController {
             DBLogger.log(new LogEntry(
                     OperationType.UPDATE,
                     "treatment",
-                    "" + this.treatment.getTid(),
+                    treatment.getTid(),
                     LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();

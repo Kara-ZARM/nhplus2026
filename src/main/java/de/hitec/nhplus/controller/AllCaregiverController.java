@@ -246,7 +246,7 @@ public class AllCaregiverController {
             DBLogger.log(new LogEntry(
                     OperationType.UPDATE,
                     "caregiver",
-                    "" + event.getRowValue().getCid(),
+                    event.getRowValue().getCid(),
                     LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();
@@ -286,7 +286,7 @@ public class AllCaregiverController {
                     DBLogger.log(new LogEntry(
                             OperationType.DELETE,
                             "caregiver",
-                            "" + selectedItem.getCid(),
+                            selectedItem.getCid(),
                             LoginController.getCurrentUser().getUsername()));
                 } catch (SQLException exception) {
                     exception.printStackTrace();
@@ -320,7 +320,7 @@ public class AllCaregiverController {
             DBLogger.log(new LogEntry(
                     OperationType.CREATE,
                     "caregiver",
-                    caregiver.getSurname() + caregiver.getFirstName(),
+                    this.dao.getLastCreatedId(),
                     LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();

@@ -2,6 +2,9 @@ package de.hitec.nhplus.controller;
 
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.UserDao;
+import de.hitec.nhplus.logging.DBLogger;
+import de.hitec.nhplus.logging.LogEntry;
+import de.hitec.nhplus.logging.OperationType;
 import de.hitec.nhplus.model.User;
 import de.hitec.nhplus.utils.AlertBuilder;
 import de.hitec.nhplus.utils.MessageUtil;
@@ -125,6 +128,11 @@ public class EditUserController {
                 if (selectedUser != null) {
                     try {
                         DaoFactory.getDaoFactory().createUserDao().deleteById(selectedUser.getUid());
+                        DBLogger.log(new LogEntry(
+                                OperationType.DELETE,
+                                "user",
+                                selectedUser.getUid(),
+                                LoginController.getCurrentUser().getUsername()));
                         updateAllUserViews();
                     } catch (SQLException exception) {
                         exception.printStackTrace();
@@ -146,6 +154,11 @@ public class EditUserController {
                 return;
             } else {
                 dao.create(new User(textFieldUsername.getText(),BCrypt.hashpw(passwordFieldEntry.getText(),BCrypt.gensalt()),User.Role.valueOf(comboBoxRoleSelect.getSelectionModel().getSelectedItem())));
+                DBLogger.log(new LogEntry(
+                        OperationType.CREATE,
+                        "user",
+                        dao.getLastCreatedId(),
+                        LoginController.getCurrentUser().getUsername()));
                 updateAllUserViews();
                 clearAllFields();
                 MessageUtil.showSuccess(labelError,"Benutzer*in erfolgreich angelegt!");
