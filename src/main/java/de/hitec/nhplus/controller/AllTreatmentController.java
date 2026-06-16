@@ -160,7 +160,7 @@ public class AllTreatmentController {
             DBLogger.log(new LogEntry(
                     OperationType.DELETE,
                     "treatment",
-                    "" + t.getTid(),
+                    t.getTid(),
                     LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();

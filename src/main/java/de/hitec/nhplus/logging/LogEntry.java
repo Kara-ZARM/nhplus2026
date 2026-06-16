@@ -3,24 +3,24 @@ package de.hitec.nhplus.logging;
 import java.time.LocalDateTime;
 
 /**
- * The class for creating LogEntry objects for {@link DBLogger}
+ * Class for creating <class>LogEntry</class> objects for {@link DBLogger}
  * Provides JSON-like strings through the toString method.
  */
 public class LogEntry {
     private LocalDateTime timestamp;
     private OperationType operationType;
     private String tableName;
-    private String recordId;
+    private long recordId;
     private String userId;
 
     /**
-     * Generates a LogEntry to capsule basic information of a database operation.
+     * Generates a <class>LogEntry</class> to capsule basic information of a database operation.
      * @param operationType Enum of class <code>OperationType</code> for create, update and delete
      * @param tableName Name of the modified table
      * @param recordId The ID of the modified record
      * @param userId The ID of the user that modified the record
      */
-    public LogEntry(OperationType operationType, String tableName, String recordId, String userId) {
+    public LogEntry(OperationType operationType, String tableName, long recordId, String userId) {
         this.timestamp =  LocalDateTime.now();
         this.operationType = operationType;
         this.tableName = tableName;
@@ -40,7 +40,7 @@ public class LogEntry {
         return tableName;
     }
 
-    public String getRecordId() {
+    public long getRecordId() {
         return recordId;
     }
 

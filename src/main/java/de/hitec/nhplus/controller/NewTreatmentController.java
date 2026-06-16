@@ -101,7 +101,7 @@ public class NewTreatmentController {
             DBLogger.log(new LogEntry(
                     OperationType.CREATE,
                     "treatment",
-                    "" + treatment.getTid(),
+                    dao.getLastCreatedId(),
                     LoginController.getCurrentUser().getUsername()));
         } catch (SQLException exception) {
             exception.printStackTrace();

@@ -18,6 +18,23 @@ public abstract class DaoImp<T> implements Dao<T> {
         }
     }
 
+    /**
+     * Get the Id of the last created dataset on this connection.
+     * Useful if a Dao object is created without a persisted Id, so the database utilizes the auto-increment.
+     * @return Id of the last created dataset
+     * @throws SQLException if the connection did not fetch any result from last_insert_rowid.
+     */
+    public long getLastCreatedId() throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("SELECT last_insert_rowid()");
+            if(resultSet.next()){
+                return resultSet.getLong(1);
+            } else {
+                throw new SQLException("No Id returned");
+            }
+        }
+    }
+
     @Override
     public T read(long key) throws SQLException {
         T object = null;
