@@ -81,6 +81,10 @@ public class MainWindowController {
         stage.setScene(mainScene);
     }
 
+    /**
+     * <code>handleShowAllUsers</code> switches to AllUserView.fxml.
+     * @param event
+     */
     @FXML
     private void handleShowAllUsers(ActionEvent event){
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("/de/hitec/nhplus/AllUserView.fxml"));

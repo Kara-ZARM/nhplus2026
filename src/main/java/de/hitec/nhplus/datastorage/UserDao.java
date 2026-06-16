@@ -125,7 +125,7 @@ public class UserDao extends DaoImp<User>{
     }
 
     /**
-     * Generates a <code>PreparedStatement</code> to update the given user's <code>username</code> and <code>role</code>, identified
+     * Generates a <code>PreparedStatement</code> to update the given user's <code>username</code>, <code>role</code> and <code>password_hash</code>, identified
      * by the id of the user (uid).
      *
      * @param user User object to update.

@@ -51,6 +51,9 @@ public class EditUserController {
     private final ObservableList<String> roleSelection = FXCollections.observableArrayList();
     private ArrayList<User> userList;
 
+    /**
+     * Initializes the UI elements to show everything like intended.
+     */
     public void initialize(){
         comboBoxUserSelect.setItems(userSelection);
         comboBoxUserSelect.getSelectionModel().select(0);
@@ -62,10 +65,17 @@ public class EditUserController {
         this.buttonUpdate.setText("Create User");
     }
 
+    /**
+     * Sets the parent controller so it can be updated by <code>updateAllUserViews</code>.
+     * @param parentController is the parent controller.
+     */
     public void setParentController(AllUserController parentController) {
         this.parentController = parentController;
     }
 
+    /**
+     * Populates the <code>comboBoxUserSelect</code> <code>ComboBox</code> with "Create new user" and all <code>User</code> from the "user" table.
+     */
     private void createUserComboBoxData(){
         userSelection.clear();
         userSelection.add("Create new user");
@@ -83,10 +93,19 @@ public class EditUserController {
         }
     }
 
+    /**
+     *
+     * @param user the <code>User</code> whose <code>username</code> is supposed to be formatted.
+     * @return String
+     */
     private String formatUserDisplayName(User user){
         return String.format("%s", user.getUsername());
     }
 
+    /**
+     * Sets the <code>buttonUpdate</code> text and disables / enables the <code>buttonDelete</code>, as well as fills the <code>textFieldUsername</code> field and <code>comboBoxRoleSelect</code> according to the <code>selectedUser</code> whenever the <code>comboBoxUserSelect</code> changes it's value.
+     * @throws SQLException
+     */
     @FXML
     public void handleUserComboBox() throws SQLException {
         UserDao dao = DaoFactory.getDaoFactory().createUserDao();
@@ -106,6 +125,9 @@ public class EditUserController {
         }
     }
 
+    /**
+     * Populates the <code>comboBoxRoleSelect</code> <code>ComboBox</code> with the <code>User.Role</code> enum values.
+     */
     private void createRoleComboBoxData(){
         roleSelection.clear();
         for(User.Role role : User.Role.values()){
@@ -115,6 +137,10 @@ public class EditUserController {
         comboBoxRoleSelect.getSelectionModel().select(1);
     }
 
+    /**
+     * Handles the <code>buttonDelete</code>, which deletes the <code>selectedUser</code>.
+     * @throws SQLException
+     */
     @FXML
     private void handleUserDelete() throws SQLException {
         UserDao dao = DaoFactory.getDaoFactory().createUserDao();
@@ -142,6 +168,10 @@ public class EditUserController {
         }
     }
 
+    /**
+     * handles the <code>buttonUpdate</code>, which either creates a new <code>User</code> or updates a <code>selectedUser</code>'s username, password or role.
+     * @throws SQLException
+     */
     @FXML
     private void handleUserUpdate() throws SQLException {
         UserDao dao = DaoFactory.getDaoFactory().createUserDao();
@@ -193,6 +223,10 @@ public class EditUserController {
         }
     }
 
+    /**
+     * Checks if the <code>textFieldUsername</code> is empty, which is not allowed.
+     * @return
+     */
     private boolean checkIfUsernameEmpty(){
         if(Objects.equals(textFieldUsername.getText(), "")) {
             MessageUtil.showError(labelError, "Benutzername darf nicht leer sein!");
@@ -202,6 +236,10 @@ public class EditUserController {
         }
     }
 
+    /**
+     * Checks the validity of the entered passwords if the <code>passwordFieldEntry</code> and <code>passwordFieldConfirm</code> are empty (in case of a user creation), both fields are not empty, both entered passwords match, and if the entered password is at least 10 characters long.
+     * @return
+     */
     private boolean checkPasswordValidity(){
         if (Objects.equals(passwordFieldEntry.getText(), "")&& Objects.equals(passwordFieldConfirm.getText(), "")) {
             MessageUtil.showError(labelError,"Das Passwort darf nicht leer sein!");
@@ -220,6 +258,9 @@ public class EditUserController {
         }
     }
 
+    /**
+     * Populates the <code>comboBoxUserSelect</code> with the new data and refreshes the <code>parentController</code>'s tableView.
+     */
     private void updateAllUserViews(){
         this.createUserComboBoxData();
         if (parentController != null) {
@@ -227,6 +268,9 @@ public class EditUserController {
         }
     }
 
+    /**
+     * Clears all fields and hides any messages.
+     */
     private void clearAllFields(){
         textFieldUsername.setText("");
         passwordFieldEntry.setText("");
