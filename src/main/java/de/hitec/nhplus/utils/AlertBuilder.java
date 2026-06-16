@@ -5,14 +5,14 @@ import javafx.scene.control.ButtonType;
 
 import java.util.Optional;
 /**
- * This Class holds methods to build alerts when trying to delete or edit a patients or caregivers data
+ * This Class holds methods to build alerts.
+ * Alerts get fired while editing and trying to save an empty field, when delete patient or caregiver data and when a wrong format for a Date is used.
  */
 
 public class AlertBuilder {
 
     /**
-     * This method handles events fired when editing fields for patients or caregivers. It opens an alert when user tries to save an empty field.
-     * On confirmation (press 'OK')  {@link } is called.
+     * This method handles events fired when editing fields for patients or caregivers. It opens an alert when a user tries to save an empty field.
      */
 
     public static Optional<ButtonType> alertBuildForEdits(){
@@ -24,7 +24,6 @@ public class AlertBuilder {
 
     /**
      * This method handles events fired by the button to delete patients or Caregivers. It opens an alert to reassure the infinitely deletion of the patients data.
-     * On confirmation (press 'OK')  {@link } is called.
      */
 
     public static Optional<ButtonType> alertForDelete() {
@@ -33,6 +32,9 @@ public class AlertBuilder {
 
         return alert.showAndWait();
     }
+    /**
+     * This method opens an alert when a user input for a Date is in the wrong Format.
+     */
 
     public static Optional<ButtonType> alertForWrongDateFormat(){
         Alert alert = new Alert(Alert.AlertType.ERROR);
