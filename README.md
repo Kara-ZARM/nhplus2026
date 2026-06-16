@@ -1,5 +1,8 @@
 # NHPlus — Lernsituation Lernfeld 5
 
+## Usernamen und Passwort 
+Usernamen sind: `admin` oder `user` und Passwort für beide ist `placeholder`. Wobei admin über mehr Rechte und Sichtbarkeiten verfügt (Hinzufügen, Löschen, Bearbeiten von Caregiver und Patient, Einsicht aller Patient*innendaten)
+
 ## Worum geht es?
 
 NHPlus ist eine bestehende Anwendung zur Verwaltung eines Pflegeheims. Sie ermöglicht das Anlegen, Anzeigen, Ändern und Löschen von Patienten und deren Behandlungen. Die Anwendung ist mit **Java**, **JavaFX** und einer **SQLite-Datenbank** realisiert.
