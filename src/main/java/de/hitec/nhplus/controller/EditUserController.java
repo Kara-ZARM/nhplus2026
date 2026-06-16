@@ -178,7 +178,7 @@ public class EditUserController {
         User selectedUser = dao.findByUsername(this.comboBoxUserSelect.getSelectionModel().getSelectedItem());
         //Case: Create new user
         if(selectedUser == null || Objects.equals(selectedUser.getUsername(), "Create new user")){
-            if (checkIfUsernameEmpty()) {
+            if (!checkUsernameValidity()) {
                 return;
             } else if (!checkPasswordValidity()) {
                 return;
@@ -203,7 +203,7 @@ public class EditUserController {
                     selectedUser.setPasswordHash(BCrypt.hashpw(passwordFieldEntry.getText(), BCrypt.gensalt()));
                 }
             }
-            if(checkIfUsernameEmpty()){
+            if(!checkUsernameValidity()){
                 return;
             }
             if((LoginController.getCurrentUser().getUid()==selectedUser.getUid()) && (!Objects.equals(selectedUser.getRoleName(), comboBoxRoleSelect.getSelectionModel().getSelectedItem()))){
@@ -224,16 +224,20 @@ public class EditUserController {
     }
 
     /**
-     * Checks if the <code>textFieldUsername</code> is empty, which is not allowed.
+     * Checks if the <code>textFieldUsername</code> is empty, which is not allowed, and if the entered username is unique.
      * @return
      */
-    private boolean checkIfUsernameEmpty(){
+    private boolean checkUsernameValidity() throws SQLException {
+        UserDao dao = DaoFactory.getDaoFactory().createUserDao();
         if(Objects.equals(textFieldUsername.getText(), "")) {
             MessageUtil.showError(labelError, "Benutzername darf nicht leer sein!");
-            return true;
-        } else {
             return false;
         }
+        if (Objects.equals(textFieldUsername.getText(), dao.findByUsername(textFieldUsername.getText()).getUsername())) {
+            MessageUtil.showError(labelError,"Benutzername muss einzigartig sein!");
+            return false;
+        }
+        return true;
     }
 
     /**
