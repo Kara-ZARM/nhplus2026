@@ -2,6 +2,12 @@
 
 Hier tragt ihr eure Ergebnisse zu den fünf Arbeitsblättern ein. Für jeden AB gibt es eine eigene Markdown-Datei mit vorbereitetem Template.
 
+## Usernamen und Passwort
+Usernamen sind: `admin` oder `user` und Passwort für beide ist `placeholder`. Wobei admin über mehr Rechte und Sichtbarkeiten verfügt (Hinzufügen, Löschen, Bearbeiten von Caregiver und Patient, Einsicht aller Patient*innendaten)
+
+# Javadoc öffnen
+index.html über Rechtsklick "open in Explorer" und von dort im Browser öffnen.
+
 ## Was liegt hier?
 
 | Datei | Inhalt |
