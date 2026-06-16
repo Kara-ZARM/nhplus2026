@@ -89,6 +89,7 @@ public class NewTreatmentController {
         String remarks = textAreaRemarks.getText();
         Treatment treatment = new Treatment(patient.getPid(), date, begin, end, description, remarks);
         createTreatment(treatment);
+        //Fixed a previous (already existing) bug that populated the tableView with 2 datasets when creating a new treatment.
         //controller.readAllAndShowInTableView();
         stage.close();
         controller.handleComboBox();

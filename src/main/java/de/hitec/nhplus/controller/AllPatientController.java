@@ -49,9 +49,6 @@ public class AllPatientController {
     private TableColumn<Patient, String> columnRoomNumber;
 
     @FXML
-    private TableColumn<Patient, String> columnAssets;
-
-    @FXML
     private Button buttonDelete;
 
     @FXML

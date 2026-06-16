@@ -46,6 +46,9 @@ public class AllUserController {
     private final ObservableList<User> users = FXCollections.observableArrayList();
     private UserDao dao;
 
+    /**
+     * Initializes the <code>tableView</code>.
+     */
     public void initialize(){
         this.readAllAndShowInTableView();
 
@@ -61,6 +64,9 @@ public class AllUserController {
         this.tableView.setItems(this.users);
     }
 
+    /**
+     * Populates the <code>tableView</code>.
+     */
     private void readAllAndShowInTableView(){
         this.users.clear();
         this.dao = DaoFactory.getDaoFactory().createUserDao();
@@ -71,6 +77,10 @@ public class AllUserController {
         }
     }
 
+    /**
+     * Creates and shows a new EditUserView.fxml stage.
+     * @throws IOException
+     */
     @FXML
     public void handleEdit() throws IOException {
         FXMLLoader loader = new FXMLLoader(
@@ -89,6 +99,9 @@ public class AllUserController {
         stage.show();
     }
 
+    /**
+     * Updates the <code>tableView</code>.
+     */
     public void refreshUserTableView(){
         this.readAllAndShowInTableView();
     }
