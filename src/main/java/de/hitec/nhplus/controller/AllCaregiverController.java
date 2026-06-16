@@ -345,20 +345,22 @@ public class AllCaregiverController {
     }
 
     private boolean areInputDataValid() {
-        if (!this.textFieldDateOfBirth.getText().isBlank()) {
-            try {
-                DateConverter.convertStringToLocalDate(this.textFieldDateOfBirth.getText());
-            } catch (Exception exception) {
-                return false;
-            }
-        }
+        String date = this.textFieldDateOfBirth.getText();
 
-        return !this.textFieldFirstName.getText().isBlank() && !this.textFieldSurname.getText().isBlank() &&
-                !this.textFieldDateOfBirth.getText().isBlank() && !this.textFieldPhoneNumber.getText().isBlank()
-                && !this.textFieldStreet.getText().isBlank() && !this.textFieldPostalCode.getText().isBlank()
-                && !this.textFieldCity.getText().isBlank() && !this.textFieldTaxId.getText().isBlank()
-                && !this.textFieldQualification.getText().isBlank();
+        boolean isDateValid = !date.isBlank() && DateConverter.isValidDate(date);
+
+        return isDateValid &&
+                !this.textFieldFirstName.getText().isBlank() &&
+                !this.textFieldSurname.getText().isBlank() &&
+                !this.textFieldDateOfBirth.getText().isBlank() &&
+                !this.textFieldPhoneNumber.getText().isBlank() &&
+                !this.textFieldStreet.getText().isBlank() &&
+                !this.textFieldPostalCode.getText().isBlank() &&
+                !this.textFieldCity.getText().isBlank() &&
+                !this.textFieldTaxId.getText().isBlank() &&
+                !this.textFieldQualification.getText().isBlank();
     }
-
-
 }
+
+
+

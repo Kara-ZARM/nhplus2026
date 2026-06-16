@@ -165,15 +165,15 @@ public class AllPatientController {
             case "columnSurname" -> patient.setSurname(newValue);
             case "columnFirstName" -> patient.setFirstName(newValue);
             case "columnDateOfBirth" -> {
-            if (DateConverter.isValidDate(newValue)) {
-                patient.setDateOfBirth(newValue);
-            } else {
-                Optional<ButtonType> result = AlertBuilder.alertForWrongDateFormat();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    event.getTableView().refresh();
+                if (DateConverter.isValidDate(newValue)) {
+                    patient.setDateOfBirth(newValue);
+                } else {
+                    Optional<ButtonType> result = AlertBuilder.alertForWrongDateFormat();
+                    if (result.isPresent() && result.get() == ButtonType.OK) {
+                        event.getTableView().refresh();
+                    }
                 }
             }
-        }
             case "columnCareLevel" -> patient.setCareLevel(newValue);
             case "columnRoomNumber" -> patient.setRoomNumber(newValue);
             case "columnAssets" -> patient.setAssets(newValue);
@@ -289,16 +289,15 @@ public class AllPatientController {
     }
 
     private boolean areInputDataValid() {
-        if (!this.textFieldDateOfBirth.getText().isBlank()) {
-            try {
-                DateConverter.convertStringToLocalDate(this.textFieldDateOfBirth.getText());
-            } catch (Exception exception) {
-                return false;
-            }
-        }
+        String date = this.textFieldDateOfBirth.getText();
 
-        return !this.textFieldFirstName.getText().isBlank() && !this.textFieldSurname.getText().isBlank() &&
-                !this.textFieldDateOfBirth.getText().isBlank() && !this.textFieldCareLevel.getText().isBlank() &&
-                !this.textFieldRoomNumber.getText().isBlank() && !this.textFieldAssets.getText().isBlank();
+        boolean isDateValid = !date.isBlank() && DateConverter.isValidDate(date);
+
+        return isDateValid &&
+                !this.textFieldFirstName.getText().isBlank() &&
+                !this.textFieldSurname.getText().isBlank() &&
+                !this.textFieldCareLevel.getText().isBlank() &&
+                !this.textFieldRoomNumber.getText().isBlank() &&
+                !this.textFieldAssets.getText().isBlank();
     }
 }
