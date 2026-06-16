@@ -183,6 +183,11 @@ public class EditUserController {
             selectedUser.setUsername(textFieldUsername.getText());
             selectedUser.setRole(User.Role.valueOf(comboBoxRoleSelect.getSelectionModel().getSelectedItem()));
             DaoFactory.getDaoFactory().createUserDao().update(selectedUser);
+            DBLogger.log(new LogEntry(
+                    OperationType.UPDATE,
+                    "user",
+                    selectedUser.getUid(),
+                    LoginController.getCurrentUser().getUsername()));
             updateAllUserViews();
             MessageUtil.showSuccess(labelError,"Benutzer*in erfolgreich aktualisiert!");
         }
