@@ -176,14 +176,16 @@ public class EditUserController {
     private void handleUserUpdate() throws SQLException {
         UserDao dao = DaoFactory.getDaoFactory().createUserDao();
         User selectedUser = dao.findByUsername(this.comboBoxUserSelect.getSelectionModel().getSelectedItem());
-        //Case: Create new user
-        if(selectedUser == null || Objects.equals(selectedUser.getUsername(), "Create new user")){
-            if (!checkUsernameValidity()) {
+        if(selectedUser == null || Objects.equals(selectedUser.getUsername(), "Create new user")) {
+            //Case: Create new user
+            if (checkIsUsernameEmpty()) {
+                return;
+            } else if (!checkUsernameUniqueness()) {
                 return;
             } else if (!checkPasswordValidity()) {
                 return;
             } else {
-                dao.create(new User(textFieldUsername.getText(),BCrypt.hashpw(passwordFieldEntry.getText(),BCrypt.gensalt()),User.Role.valueOf(comboBoxRoleSelect.getSelectionModel().getSelectedItem())));
+                dao.create(new User(textFieldUsername.getText(), BCrypt.hashpw(passwordFieldEntry.getText(), BCrypt.gensalt()), User.Role.valueOf(comboBoxRoleSelect.getSelectionModel().getSelectedItem())));
                 DBLogger.log(new LogEntry(
                         OperationType.CREATE,
                         "user",
@@ -191,23 +193,22 @@ public class EditUserController {
                         LoginController.getCurrentUser().getUsername()));
                 updateAllUserViews();
                 clearAllFields();
-                MessageUtil.showSuccess(labelError,"Benutzer*in erfolgreich angelegt!");
+                MessageUtil.showSuccess(labelError, "Benutzer*in erfolgreich angelegt!");
             }
-        }
-        //Case: Update user
-        else {
-            if(!Objects.equals(passwordFieldEntry.getText(), "") || !Objects.equals(passwordFieldConfirm.getText(), "")){
-                if(!checkPasswordValidity()){
+        } else {
+            //Case: Update user
+            if (!Objects.equals(passwordFieldEntry.getText(), "") || !Objects.equals(passwordFieldConfirm.getText(), "")) {
+                if (!checkPasswordValidity()) {
                     return;
                 } else {
                     selectedUser.setPasswordHash(BCrypt.hashpw(passwordFieldEntry.getText(), BCrypt.gensalt()));
                 }
             }
-            if(!checkUsernameValidity()){
+            if (checkIsUsernameEmpty()) {
                 return;
             }
-            if((LoginController.getCurrentUser().getUid()==selectedUser.getUid()) && (!Objects.equals(selectedUser.getRoleName(), comboBoxRoleSelect.getSelectionModel().getSelectedItem()))){
-                MessageUtil.showError(labelError,"Der eingeloggte Nutzer darf seine Rolle nicht ändern!");
+            if ((LoginController.getCurrentUser().getUid() == selectedUser.getUid()) && (!Objects.equals(selectedUser.getRoleName(), comboBoxRoleSelect.getSelectionModel().getSelectedItem()))) {
+                MessageUtil.showError(labelError, "Der eingeloggte Nutzer darf seine Rolle nicht ändern!");
                 return;
             }
             selectedUser.setUsername(textFieldUsername.getText());
@@ -219,21 +220,30 @@ public class EditUserController {
                     selectedUser.getUid(),
                     LoginController.getCurrentUser().getUsername()));
             updateAllUserViews();
-            MessageUtil.showSuccess(labelError,"Benutzer*in erfolgreich aktualisiert!");
+            MessageUtil.showSuccess(labelError, "Benutzer*in erfolgreich aktualisiert!");
         }
     }
 
     /**
-     * Checks if the <code>textFieldUsername</code> is empty, which is not allowed, and if the entered username is unique.
-     * @return
+     * Checks if the <code>textFieldUsername</code> is empty, which is not allowed.
+     * @return boolean
      */
-    private boolean checkUsernameValidity() throws SQLException {
-        UserDao dao = DaoFactory.getDaoFactory().createUserDao();
+    private boolean checkIsUsernameEmpty() {
         if(Objects.equals(textFieldUsername.getText(), "")) {
             MessageUtil.showError(labelError, "Benutzername darf nicht leer sein!");
-            return false;
+            return true;
         }
-        if (Objects.equals(textFieldUsername.getText(), dao.findByUsername(textFieldUsername.getText()).getUsername())) {
+        return false;
+    }
+
+    /**
+     * Checks if the entered username is unique.
+     * @return boolean
+     * @throws SQLException
+     */
+    private boolean checkUsernameUniqueness() throws SQLException {
+        UserDao dao = DaoFactory.getDaoFactory().createUserDao();
+        if ((dao.findByUsername(textFieldUsername.getText())!=null)&&(Objects.equals(textFieldUsername.getText(), dao.findByUsername(textFieldUsername.getText()).getUsername()))) {
             MessageUtil.showError(labelError,"Benutzername muss einzigartig sein!");
             return false;
         }
