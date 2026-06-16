@@ -74,7 +74,7 @@ class PatientDaoTest {
         Patient patient = new Patient(
                 "Max", "Mustermann",
                 LocalDate.of(1990, 5, 15),
-                "3", "101", "normal"
+                "3", "101"
         );
 
         // Act: Patienten in der Datenbank anlegen und alle Patienten auslesen
@@ -98,7 +98,7 @@ class PatientDaoTest {
         Patient patient = new Patient(
                 "Erika", "Musterfrau",
                 LocalDate.of(1985, 3, 20),
-                "2", "202", "normal"
+                "2", "202"
         );
         dao.create(patient);
 
